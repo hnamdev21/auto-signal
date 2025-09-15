@@ -164,4 +164,50 @@ export interface VolumeDivergenceSignal {
   confidence: number;
   description: string;
   reversalProbability: "LOW" | "MEDIUM" | "HIGH";
+  takeProfit: number;
+  stopLoss: number;
+}
+
+export interface TPSLConfig {
+  // RSI Divergence TP/SL
+  rsiDivergence: {
+    tpPercent: number;
+    slPercent: number;
+    atrMultiplier: number; // ATR multiplier for dynamic SL
+  };
+  // MACD Divergence TP/SL
+  macdDivergence: {
+    tpPercent: number;
+    slPercent: number;
+    atrMultiplier: number;
+  };
+  // Market Structure TP/SL
+  marketStructure: {
+    tpPercent: number;
+    slPercent: number;
+    atrMultiplier: number;
+    structureBased: boolean; // Use structure levels for SL
+  };
+  // Volume Spike TP/SL
+  volumeSpike: {
+    tpPercent: number;
+    slPercent: number;
+    atrMultiplier: number;
+    volumeBased: boolean; // Adjust based on volume strength
+  };
+  // Volume Divergence TP/SL
+  volumeDivergence: {
+    tpPercent: number;
+    slPercent: number;
+    atrMultiplier: number;
+    reversalBased: boolean; // Adjust based on reversal probability
+  };
+}
+
+export interface TPSLResult {
+  takeProfit: number;
+  stopLoss: number;
+  riskRewardRatio: number;
+  method: string;
+  confidence: number;
 }

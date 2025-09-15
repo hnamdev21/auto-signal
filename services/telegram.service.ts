@@ -383,6 +383,11 @@ ${severityEmoji} <b>Cảnh Báo Volume Spike - ${symbol}</b>
         ? "⚡"
         : "📊";
 
+    // Calculate risk/reward ratio
+    const risk = Math.abs(currentPrice - volumeDivergence.stopLoss);
+    const reward = Math.abs(volumeDivergence.takeProfit - currentPrice);
+    const riskRewardRatio = risk > 0 ? reward / risk : 0;
+
     const message = `
 ${typeEmoji} <b>Cảnh Báo Phân Kỳ Volume - ${symbol}</b>
 
@@ -400,6 +405,12 @@ ${typeEmoji} <b>Cảnh Báo Phân Kỳ Volume - ${symbol}</b>
       volumeDivergence.reversalProbability
     }
 📊 <b>Độ Tin Cậy:</b> ${volumeDivergence.confidence.toFixed(1)}%
+
+🎯 <b>TP/SL Thông Minh:</b>
+📈 <b>Chốt Lời:</b> ${volumeDivergence.takeProfit.toLocaleString()} USDT
+🛡️ <b>Cắt Lỗ:</b> ${volumeDivergence.stopLoss.toLocaleString()} USDT
+📊 <b>Tỷ Lệ R/R:</b> ${riskRewardRatio.toFixed(2)}:1
+
 🕐 <b>Thời Gian:</b> ${time}
 
 📝 <b>Mô Tả:</b> ${volumeDivergence.description}

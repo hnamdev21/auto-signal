@@ -6,6 +6,7 @@ import { MACDSignalService } from "./services/macd-signal.service";
 import { MarketStructureService } from "./services/market-structure.service";
 import { VolumeAlertService } from "./services/volume-alert.service";
 import { VolumeDivergenceService } from "./services/volume-divergence.service";
+import { TPSLService } from "./services/tpsl.service";
 import { UTCScheduler } from "./utils/scheduler.utils";
 import {
   BotConfig,
@@ -63,6 +64,7 @@ const volumeAlertService = new VolumeAlertService({
 const volumeDivergenceService = new VolumeDivergenceService({
   lookbackPeriod: 3,
 });
+const tpslService = new TPSLService();
 const scheduler = new UTCScheduler();
 
 // Validate configuration
@@ -246,6 +248,8 @@ async function initializeBot(): Promise<void> {
     );
     console.log(`   - Volume Thresholds: 1.5x/2.0x/3.0x/5.0x`);
     console.log(`   - Volume Divergence Lookback: 3 candles`);
+    console.log(`🎯 Smart TP/SL System: ENABLED`);
+    console.log(tpslService.getConfigSummary());
     console.log(`🔥 Multi-Confirmation Alerts: ENABLED`);
     console.log(`📊 Volume Spike Alerts: ENABLED (Independent)`);
     console.log(`📊 Volume Divergence Alerts: ENABLED (Independent)`);

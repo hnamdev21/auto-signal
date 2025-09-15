@@ -348,6 +348,18 @@ export function detectVolumeDivergence(
         ? `🟢 Phân kỳ tăng giá: Giá giảm nhưng volume giảm mạnh hơn - Có thể đảo chiều tăng`
         : `🔴 Phân kỳ giảm giá: Giá tăng nhưng volume giảm - Có thể đảo chiều giảm`;
 
+    // Calculate basic TP/SL (will be enhanced by TPSLService)
+    const tpPercent = 2.2;
+    const slPercent = 1.1;
+    const takeProfit =
+      divergenceType === "BULLISH"
+        ? currentPrice * (1 + tpPercent / 100)
+        : currentPrice * (1 - tpPercent / 100);
+    const stopLoss =
+      divergenceType === "BULLISH"
+        ? currentPrice * (1 - slPercent / 100)
+        : currentPrice * (1 + slPercent / 100);
+
     return {
       type: "VOLUME_DIVERGENCE",
       priceDirection: priceTrend as "INCREASING" | "DECREASING",
@@ -359,6 +371,8 @@ export function detectVolumeDivergence(
       confidence,
       description,
       reversalProbability,
+      takeProfit,
+      stopLoss,
     };
   } catch (error) {
     console.error("Error detecting volume divergence:", error);
