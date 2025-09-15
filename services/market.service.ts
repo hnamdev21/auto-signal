@@ -6,7 +6,7 @@ export class MarketService {
   private readonly symbol: string;
   private readonly interval: string;
 
-  constructor(symbol: string = "BTCUSDT", interval: string = "1m") {
+  constructor(symbol: string = "BTCUSDT", interval: string = "5m") {
     this.symbol = symbol;
     this.interval = interval;
   }
