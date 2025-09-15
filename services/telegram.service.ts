@@ -1,4 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
+import { VolumeAlert } from "../types/market.model";
 
 export class TelegramService {
   private bot: TelegramBot;
@@ -68,6 +69,91 @@ ${context ? `<b>Context:</b> ${context}\n` : ""}
     `.trim();
 
     await this.sendMessage(message);
+  }
+
+  /**
+   * Send volume spike alert
+   */
+  async sendVolumeSpikeAlert(alert: VolumeAlert): Promise<void> {
+    const message = `
+🚨 <b>VOLUME SPIKE DETECTED</b>
+
+📊 <b>Symbol:</b> ${alert.symbol}
+⏰ <b>Timeframe:</b> ${alert.timeframe}
+💰 <b>Price:</b> $${alert.currentPrice.toFixed(2)}
+📈 <b>Volume:</b> ${alert.volume.toFixed(2)}
+📊 <b>Average Volume:</b> ${alert.averageVolume.toFixed(2)}
+🔥 <b>Spike Ratio:</b> ${alert.spikeRatio?.toFixed(2)}x
+
+🕐 <b>Time:</b> ${new Date(alert.timestamp).toISOString()}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<i>Volume spike detected - trading activity increased significantly</i>
+    `.trim();
+
+    await this.sendMessage(message);
+  }
+
+  /**
+   * Send volume divergence alert
+   */
+  async sendVolumeDivergenceAlert(alert: VolumeAlert): Promise<void> {
+    if (!alert.divergenceData) return;
+
+    const { candleCount, priceChange, volumeChange, candles } =
+      alert.divergenceData;
+
+    const message = `
+⚠️ <b>VOLUME DIVERGENCE DETECTED</b>
+
+📊 <b>Symbol:</b> ${alert.symbol}
+⏰ <b>Timeframe:</b> ${alert.timeframe}
+💰 <b>Current Price:</b> $${alert.currentPrice.toFixed(2)}
+🕯️ <b>Candles Analyzed:</b> ${candleCount}
+
+📈 <b>Price Change:</b> ${priceChange > 0 ? "+" : ""}${priceChange.toFixed(2)}%
+📉 <b>Volume Change:</b> ${volumeChange.toFixed(2)}%
+
+<b>Recent Candles:</b>
+${candles
+  .map(
+    (candle, index) =>
+      `${index + 1}. Price: $${candle.close.toFixed(
+        2
+      )} | Volume: ${candle.volume.toFixed(2)}`
+  )
+  .join("\n")}
+
+🕐 <b>Time:</b> ${new Date(alert.timestamp).toISOString()}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<i>⚠️ Warning: Price rising but volume declining - potential weakness</i>
+    `.trim();
+
+    await this.sendMessage(message);
+  }
+
+  /**
+   * Send multiple alerts
+   */
+  async sendVolumeAlerts(alerts: VolumeAlert[]): Promise<void> {
+    for (const alert of alerts) {
+      try {
+        if (alert.type === "spike") {
+          await this.sendVolumeSpikeAlert(alert);
+        } else if (alert.type === "divergence") {
+          await this.sendVolumeDivergenceAlert(alert);
+        }
+
+        // Small delay between alerts to avoid rate limiting
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } catch (error) {
+        console.error(
+          `❌ Error sending alert for ${alert.symbol} ${alert.timeframe}:`,
+          error
+        );
+      }
+    }
   }
 
   /**

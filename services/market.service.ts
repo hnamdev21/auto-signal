@@ -31,7 +31,7 @@ export class MarketService {
    * Fetch kline data for RSI calculation
    * @param limit Number of klines to fetch (default: 100 to ensure we have enough data)
    */
-  async getKlineData(limit: number = 100): Promise<KlineData[]> {
+  async getKlineData(limit: number = 1500): Promise<KlineData[]> {
     try {
       const response = await axios.get(`${this.baseUrl}/klines`, {
         params: {

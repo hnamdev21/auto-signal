@@ -33,3 +33,52 @@ export interface BotConfig {
   telegramBotToken: string;
   telegramChatId: string;
 }
+
+// Alert System Types
+export interface AlertConfig {
+  pairs: string[];
+  timeframes: string[];
+  volumeSpikeThreshold: number; // Default: 1.5
+  divergenceCandleCount: number; // Default: 3
+}
+
+export interface VolumeAlert {
+  type: "spike" | "divergence";
+  symbol: string;
+  timeframe: string;
+  timestamp: number;
+  currentPrice: number;
+  volume: number;
+  averageVolume: number;
+  spikeRatio?: number;
+  divergenceData?: {
+    candleCount: number;
+    priceChange: number;
+    volumeChange: number;
+    candles: Array<{
+      openTime: number;
+      close: number;
+      volume: number;
+    }>;
+  };
+}
+
+export interface DivergenceTracker {
+  [key: string]: {
+    [timeframe: string]: {
+      candles: Array<{
+        openTime: number;
+        close: number;
+        volume: number;
+        isClosed: boolean;
+      }>;
+      lastAlertTime?: number;
+    };
+  };
+}
+
+export interface MultiPairMarketData {
+  [symbol: string]: {
+    [timeframe: string]: MarketData;
+  };
+}
