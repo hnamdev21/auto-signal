@@ -1,0 +1,59 @@
+//@version=5
+indicator("RSI Divergence B/S with TP & SL Centered + Alerts", overlay=true)
+
+rsiLength    = input.int(14, "RSI Length")
+pivotLen     = input.int(2, "Pivot Lookback")
+bullDivDiff  = input.float(5, "RSI Min Diff for Bullish", step=0.1)
+bearDivDiff  = input.float(5, "RSI Min Diff for Bearish", step=0.1)
+bullRsiLevel = input.float(35.0, "RSI Oversold Level", step=0.1)
+bearRsiLevel = input.float(65.0, "RSI Overbought Level", step=0.1)
+tpPercent    = input.float(1.0, "TP %", step=0.1)
+slPercent    = input.float(1.0, "SL %", step=0.1)
+src = close
+
+rsi = ta.rsi(src, rsiLength)
+
+priceHigh = ta.pivothigh(src, pivotLen, pivotLen)
+priceLow  = ta.pivotlow(src, pivotLen, pivotLen)
+rsiHigh   = ta.pivothigh(rsi, pivotLen, pivotLen)
+rsiLow    = ta.pivotlow(rsi, pivotLen, pivotLen)
+
+var float prevPriceLow  = na
+var float prevRsiLow    = na
+var float prevPriceHigh = na
+var float prevRsiHigh   = na
+
+bullSignal = false
+bearSignal = false
+
+f_draw_tp_sl(price, isBull) =>
+    tp = isBull ? price * (1 + tpPercent/100) : price * (1 - tpPercent/100)
+    sl = isBull ? price * (1 - slPercent/100) : price * (1 + slPercent/100)
+    startBar = bar_index - 2
+    endBar = bar_index + 50
+    midBar = math.floor((startBar + endBar) / 2)
+    line.new(startBar, tp, endBar, tp, xloc=xloc.bar_index, color=color.green, width=1, force_overlay=true)
+    line.new(startBar, sl, endBar, sl, xloc=xloc.bar_index, color=color.red, width=1, force_overlay=true)
+    [tp, sl]
+
+if not na(priceLow)
+    if not na(prevPriceLow) and not na(prevRsiLow)
+        if priceLow < prevPriceLow and rsiLow > prevRsiLow + bullDivDiff and rsiLow <= bullRsiLevel
+            label.new(bar_index - pivotLen, priceLow, "B",
+                      style=label.style_label_up, color=color.green, textcolor=color.white, size=size.small, force_overlay=true)
+            [tpPrice, slPrice] = f_draw_tp_sl(priceLow, true)
+            alert("Entry LONG | TP: " + str.tostring(tpPrice, format.mintick) + " | SL: " + str.tostring(slPrice, format.mintick))
+            bullSignal := true
+    prevPriceLow := priceLow
+    prevRsiLow   := rsiLow
+
+if not na(priceHigh)
+    if not na(prevPriceHigh) and not na(prevRsiHigh)
+        if priceHigh > prevPriceHigh and rsiHigh < prevRsiHigh - bearDivDiff and rsiHigh >= bearRsiLevel
+            label.new(bar_index - pivotLen, priceHigh, "S",
+                      style=label.style_label_down, color=color.red, textcolor=color.white, size=size.small, force_overlay=true)
+            [tpPrice, slPrice] = f_draw_tp_sl(priceHigh, false)
+            alert("Entry SHORT | TP: " + str.tostring(tpPrice, format.mintick) + " | SL: " + str.tostring(slPrice, format.mintick))
+            bearSignal := true
+    prevPriceHigh := priceHigh
+    prevRsiHigh   := rsiHigh
