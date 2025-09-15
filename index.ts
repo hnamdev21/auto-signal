@@ -4,6 +4,8 @@ import { TelegramService } from "./services/telegram.service";
 import { SignalService } from "./services/signal.service";
 import { MACDSignalService } from "./services/macd-signal.service";
 import { MarketStructureService } from "./services/market-structure.service";
+import { VolumeAlertService } from "./services/volume-alert.service";
+import { VolumeDivergenceService } from "./services/volume-divergence.service";
 import { UTCScheduler } from "./utils/scheduler.utils";
 import {
   BotConfig,
@@ -51,6 +53,16 @@ const marketStructureService = new MarketStructureService({
   tpPercent: divergenceConfig.tpPercent,
   slPercent: divergenceConfig.slPercent,
 });
+const volumeAlertService = new VolumeAlertService({
+  volumePeriod: 20,
+  lowThreshold: 1.5,
+  mediumThreshold: 2.0,
+  highThreshold: 3.0,
+  extremeThreshold: 5.0,
+});
+const volumeDivergenceService = new VolumeDivergenceService({
+  lookbackPeriod: 3,
+});
 const scheduler = new UTCScheduler();
 
 // Validate configuration
@@ -75,10 +87,18 @@ async function executeBotTask(): Promise<void> {
     const marketData = await marketService.getMarketData();
 
     // Generate signals from all services (running in parallel)
-    const [rsiSignal, macdSignal, structureSignal] = await Promise.all([
+    const [
+      rsiSignal,
+      macdSignal,
+      structureSignal,
+      volumeAlert,
+      volumeDivergence,
+    ] = await Promise.all([
       signalService.generateTradingSignal(marketData),
       macdSignalService.generateMACDSignal(marketData),
       marketStructureService.generateStructureSignal(marketData),
+      volumeAlertService.generateVolumeAlert(marketData),
+      volumeDivergenceService.getVolumeDivergenceSignal(marketData),
     ]);
 
     if (!rsiSignal) {
@@ -105,6 +125,31 @@ async function executeBotTask(): Promise<void> {
       multiSignalAlert.macdDivergence ||
       multiSignalAlert.marketStructure;
 
+    // Check for volume spike (independent alert)
+    if (volumeAlert.volumeSpike) {
+      await telegramService.sendVolumeAlert(volumeAlert);
+      console.log(
+        `📊 VOLUME SPIKE - ${
+          volumeAlert.volumeSpike.severity
+        } | ${volumeAlert.volumeSpike.volumeRatio.toFixed(
+          1
+        )}x avg volume | Price: ${marketData.currentPrice}`
+      );
+    }
+
+    // Check for volume divergence (independent alert)
+    if (volumeDivergence) {
+      await telegramService.sendVolumeDivergenceAlert(
+        marketData.symbol,
+        marketData.currentPrice,
+        volumeDivergence,
+        Date.now()
+      );
+      console.log(
+        `📊 VOLUME DIVERGENCE - ${volumeDivergence.divergenceType} | ${volumeDivergence.reversalProbability} probability | Price: ${marketData.currentPrice}`
+      );
+    }
+
     if (hasAnySignal) {
       await telegramService.sendMultiSignalAlert(multiSignalAlert);
 
@@ -129,10 +174,13 @@ async function executeBotTask(): Promise<void> {
       );
     } else {
       // Just log regular monitoring without sending alerts
+      const volumeContext = volumeAlertService.getVolumeContext(marketData);
       console.log(
         `📊 Monitoring - Price: ${
           marketData.currentPrice
-        }, RSI: ${rsiSignal.rsi.toFixed(2)}, Trend: ${structureSignal.trend}`
+        }, RSI: ${rsiSignal.rsi.toFixed(2)}, Trend: ${
+          structureSignal.trend
+        } | ${volumeContext}`
       );
     }
   } catch (error) {
@@ -179,20 +227,28 @@ async function initializeBot(): Promise<void> {
     // Start the scheduler
     scheduler.startMinuteScheduler(executeBotTask);
 
-    console.log("🎉 Multi-Signal Bot initialized successfully!");
+    console.log(
+      "🎉 Multi-Signal Bot with Volume Alerts initialized successfully!"
+    );
     console.log(`📊 Monitoring: ${config.symbol}`);
     console.log(`📈 RSI Period: ${config.rsiPeriod}`);
     console.log(`⏰ Interval: ${config.interval}`);
     console.log(`🎯 RSI Divergence Detection: ENABLED`);
     console.log(`📊 MACD Divergence Detection: ENABLED`);
     console.log(`🏗️ Market Structure Detection: ENABLED`);
+    console.log(`📈 Volume Spike Detection: ENABLED`);
+    console.log(`📊 Volume Divergence Detection: ENABLED`);
     console.log(`   - Pivot Length: ${divergenceConfig.pivotLength}`);
     console.log(`   - Bull RSI Level: ${divergenceConfig.bullRsiLevel}`);
     console.log(`   - Bear RSI Level: ${divergenceConfig.bearRsiLevel}`);
     console.log(
       `   - TP/SL: ${divergenceConfig.tpPercent}%/${divergenceConfig.slPercent}%`
     );
+    console.log(`   - Volume Thresholds: 1.5x/2.0x/3.0x/5.0x`);
+    console.log(`   - Volume Divergence Lookback: 3 candles`);
     console.log(`🔥 Multi-Confirmation Alerts: ENABLED`);
+    console.log(`📊 Volume Spike Alerts: ENABLED (Independent)`);
+    console.log(`📊 Volume Divergence Alerts: ENABLED (Independent)`);
     console.log(
       `🕐 Next execution in ${scheduler.getSecondsUntilNextMinute()} seconds`
     );

@@ -126,3 +126,42 @@ export interface MultiSignalAlert {
   macdDivergence?: MACDDivergenceSignal | null;
   marketStructure?: MarketStructureSignal | null;
 }
+
+export interface VolumeData {
+  currentVolume: number;
+  averageVolume: number;
+  volumeRatio: number;
+  timestamp: number;
+}
+
+export interface VolumeSpikeSignal {
+  type: "VOLUME_SPIKE";
+  currentVolume: number;
+  averageVolume: number;
+  volumeRatio: number;
+  price: number;
+  timestamp: number;
+  severity: "LOW" | "MEDIUM" | "HIGH" | "EXTREME";
+  description: string;
+}
+
+export interface VolumeAlert {
+  symbol: string;
+  currentPrice: number;
+  volumeSpike?: VolumeSpikeSignal | null;
+  timestamp: number;
+  timeframe: string;
+}
+
+export interface VolumeDivergenceSignal {
+  type: "VOLUME_DIVERGENCE";
+  priceDirection: "INCREASING" | "DECREASING";
+  volumeDirection: "INCREASING" | "DECREASING";
+  divergenceType: "BULLISH" | "BEARISH";
+  price: number;
+  volumeRatio: number;
+  timestamp: number;
+  confidence: number;
+  description: string;
+  reversalProbability: "LOW" | "MEDIUM" | "HIGH";
+}
