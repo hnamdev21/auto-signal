@@ -41,3 +41,38 @@ export interface BotConfig {
   telegramBotToken: string;
   telegramChatId: string;
 }
+
+export interface PivotPoint {
+  value: number;
+  index: number;
+  timestamp: number;
+}
+
+export interface DivergenceConfig {
+  pivotLength: number;
+  bullDivergenceDiff: number;
+  bearDivergenceDiff: number;
+  bullRsiLevel: number;
+  bearRsiLevel: number;
+  tpPercent: number;
+  slPercent: number;
+}
+
+export interface DivergenceSignal {
+  type: "BULLISH" | "BEARISH";
+  price: number;
+  rsi: number;
+  timestamp: number;
+  takeProfit: number;
+  stopLoss: number;
+  confidence: number;
+}
+
+export interface TradingSignal {
+  symbol: string;
+  currentPrice: number;
+  rsi: number;
+  divergenceSignal?: DivergenceSignal | null;
+  timestamp: number;
+  timeframe: string;
+}

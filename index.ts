@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
 import { MarketService } from "./services/market.service";
 import { TelegramService } from "./services/telegram.service";
+import { SignalService } from "./services/signal.service";
 import { UTCScheduler } from "./utils/scheduler.utils";
-import { calculateRSI } from "./utils/rsi.utils";
-import { AlertData, BotConfig } from "./types/market.model";
+import { BotConfig, DivergenceConfig } from "./types/market.model";
 
 // Load environment variables
 dotenv.config();
@@ -12,9 +12,20 @@ dotenv.config();
 const config: BotConfig = {
   symbol: process.env.SYMBOL || "BTCUSDT",
   rsiPeriod: parseInt(process.env.RSI_PERIOD || "14"),
-  interval: process.env.INTERVAL || "1m",
+  interval: process.env.INTERVAL || "5m",
   telegramBotToken: process.env.TELEGRAM_BOT_TOKEN || "",
   telegramChatId: process.env.TELEGRAM_CHAT_ID || "",
+};
+
+// Divergence configuration
+const divergenceConfig: DivergenceConfig = {
+  pivotLength: parseInt(process.env.PIVOT_LENGTH || "2"),
+  bullDivergenceDiff: parseFloat(process.env.BULL_DIV_DIFF || "1"),
+  bearDivergenceDiff: parseFloat(process.env.BEAR_DIV_DIFF || "1"),
+  bullRsiLevel: parseFloat(process.env.BULL_RSI_LEVEL || "45"),
+  bearRsiLevel: parseFloat(process.env.BEAR_RSI_LEVEL || "55"),
+  tpPercent: parseFloat(process.env.TP_PERCENT || "2.0"),
+  slPercent: parseFloat(process.env.SL_PERCENT || "1.0"),
 };
 
 // Initialize services
@@ -23,6 +34,7 @@ const telegramService = new TelegramService(
   config.telegramBotToken,
   config.telegramChatId
 );
+const signalService = new SignalService(divergenceConfig);
 const scheduler = new UTCScheduler();
 
 // Validate configuration
@@ -46,24 +58,34 @@ async function executeBotTask(): Promise<void> {
     // Get market data
     const marketData = await marketService.getMarketData();
 
-    // Calculate RSI
-    const rsiData = calculateRSI(marketData.klineData, config.rsiPeriod);
+    // Generate trading signal with divergence detection
+    const tradingSignal = signalService.generateTradingSignal(marketData);
 
-    // Create alert data
-    const alertData: AlertData = {
-      symbol: config.symbol,
-      currentPrice: marketData.currentPrice,
-      rsi: rsiData.rsi,
-      timestamp: Date.now(),
-      timeframe: config.interval,
-    };
+    if (!tradingSignal) {
+      console.log("No trading signal generated");
+      return;
+    }
 
-    // Send alert
-    await telegramService.sendPriceAlert(alertData);
-
-    console.log(
-      `✅ Alert sent - Price: ${alertData.currentPrice}, RSI: ${alertData.rsi}`
-    );
+    // Only send alerts when there's a divergence signal
+    if (tradingSignal.divergenceSignal) {
+      await telegramService.sendTradingSignal(tradingSignal);
+      console.log(
+        `🎯 DIVERGENCE SIGNAL - ${
+          tradingSignal.divergenceSignal.type
+        } | Price: ${tradingSignal.currentPrice} | RSI: ${
+          tradingSignal.rsi
+        } | Confidence: ${tradingSignal.divergenceSignal.confidence.toFixed(
+          1
+        )}%`
+      );
+    } else {
+      // Just log regular monitoring without sending alerts
+      console.log(
+        `📊 Monitoring - Price: ${
+          tradingSignal.currentPrice
+        }, RSI: ${tradingSignal.rsi.toFixed(2)}`
+      );
+    }
   } catch (error) {
     console.error("❌ Error in bot task:", error);
 
@@ -112,6 +134,13 @@ async function initializeBot(): Promise<void> {
     console.log(`📊 Monitoring: ${config.symbol}`);
     console.log(`📈 RSI Period: ${config.rsiPeriod}`);
     console.log(`⏰ Interval: ${config.interval}`);
+    console.log(`🎯 Divergence Detection: ENABLED`);
+    console.log(`   - Pivot Length: ${divergenceConfig.pivotLength}`);
+    console.log(`   - Bull RSI Level: ${divergenceConfig.bullRsiLevel}`);
+    console.log(`   - Bear RSI Level: ${divergenceConfig.bearRsiLevel}`);
+    console.log(
+      `   - TP/SL: ${divergenceConfig.tpPercent}%/${divergenceConfig.slPercent}%`
+    );
     console.log(
       `🕐 Next execution in ${scheduler.getSecondsUntilNextMinute()} seconds`
     );
