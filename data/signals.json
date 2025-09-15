@@ -1,0 +1,22 @@
+[
+  {
+    "id": "SIG_1757930520577_y3tda",
+    "symbol": "BTCUSDT",
+    "signalType": "VOLUME_DIVERGENCE",
+    "signalSubType": "BEARISH",
+    "entryPrice": 114911.06,
+    "takeProfit": 112383.01668,
+    "stopLoss": 116175.08165999998,
+    "entryTime": 1757930520577,
+    "entryReason": "Volume BEARISH Divergence - HIGH reversal probability, Confidence: 100.0%",
+    "confidence": 100,
+    "status": "ACTIVE",
+    "riskRewardRatio": 2.000000000000023,
+    "metadata": {
+      "volumeRatio": 0.21495590520549734,
+      "reversalProbability": "HIGH",
+      "priceDirection": "INCREASING",
+      "volumeDirection": "DECREASING"
+    }
+  }
+]

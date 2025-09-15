@@ -211,3 +211,72 @@ export interface TPSLResult {
   method: string;
   confidence: number;
 }
+
+export interface SignalRecord {
+  id: string;
+  symbol: string;
+  signalType:
+    | "RSI_DIVERGENCE"
+    | "MACD_DIVERGENCE"
+    | "MARKET_STRUCTURE"
+    | "VOLUME_SPIKE"
+    | "VOLUME_DIVERGENCE";
+  signalSubType: string; // BULLISH/BEARISH, HH/HL/LH/LL, etc.
+  entryPrice: number;
+  takeProfit: number;
+  stopLoss: number;
+  entryTime: number;
+  entryReason: string;
+  confidence: number;
+  status: "ACTIVE" | "TP_HIT" | "SL_HIT" | "EXPIRED";
+  exitPrice?: number;
+  exitTime?: number;
+  pnl?: number;
+  pnlPercent?: number;
+  duration?: number; // in minutes
+  riskRewardRatio: number;
+  metadata: {
+    rsi?: number;
+    macd?: number;
+    volumeRatio?: number;
+    reversalProbability?: string;
+    structureType?: string;
+    [key: string]: any;
+  };
+}
+
+export interface SignalStatistics {
+  totalSignals: number;
+  activeSignals: number;
+  completedSignals: number;
+  tpHit: number;
+  slHit: number;
+  expired: number;
+  winRate: number;
+  totalPnl: number;
+  totalPnlPercent: number;
+  averagePnl: number;
+  averagePnlPercent: number;
+  averageDuration: number;
+  bestTrade: SignalRecord | null;
+  worstTrade: SignalRecord | null;
+  signalTypeStats: {
+    [signalType: string]: {
+      count: number;
+      winRate: number;
+      totalPnl: number;
+      averagePnl: number;
+    };
+  };
+  timeStats: {
+    hourly: { [hour: string]: number };
+    daily: { [day: string]: number };
+  };
+}
+
+export interface SignalTrackingConfig {
+  dataFilePath: string;
+  maxActiveSignals: number;
+  signalExpiryHours: number;
+  statisticsUpdateInterval: number; // in minutes
+}

@@ -423,6 +423,30 @@ ${typeEmoji} <b>Cảnh Báo Phân Kỳ Volume - ${symbol}</b>
   }
 
   /**
+   * Send statistics report
+   */
+  async sendStatisticsReport(statistics: any): Promise<void> {
+    const message = statistics;
+    await this.sendMessage(message);
+  }
+
+  /**
+   * Send recent signals report
+   */
+  async sendRecentSignalsReport(recentSignals: any): Promise<void> {
+    const message = recentSignals;
+    await this.sendMessage(message);
+  }
+
+  /**
+   * Send active signals report
+   */
+  async sendActiveSignalsReport(activeSignals: any): Promise<void> {
+    const message = activeSignals;
+    await this.sendMessage(message);
+  }
+
+  /**
    * Test if the bot can send messages
    */
   async testConnection(): Promise<boolean> {

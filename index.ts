@@ -7,6 +7,8 @@ import { MarketStructureService } from "./services/market-structure.service";
 import { VolumeAlertService } from "./services/volume-alert.service";
 import { VolumeDivergenceService } from "./services/volume-divergence.service";
 import { TPSLService } from "./services/tpsl.service";
+import { SignalTrackerService } from "./services/signal-tracker.service";
+import { StatisticsService } from "./services/statistics.service";
 import { UTCScheduler } from "./utils/scheduler.utils";
 import {
   BotConfig,
@@ -65,6 +67,13 @@ const volumeDivergenceService = new VolumeDivergenceService({
   lookbackPeriod: 3,
 });
 const tpslService = new TPSLService();
+const signalTracker = new SignalTrackerService({
+  dataFilePath: "./data/signals.json",
+  maxActiveSignals: 50,
+  signalExpiryHours: 24,
+  statisticsUpdateInterval: 60,
+});
+const statisticsService = new StatisticsService();
 const scheduler = new UTCScheduler();
 
 // Validate configuration
@@ -150,10 +159,40 @@ async function executeBotTask(): Promise<void> {
       console.log(
         `📊 VOLUME DIVERGENCE - ${volumeDivergence.divergenceType} | ${volumeDivergence.reversalProbability} probability | Price: ${marketData.currentPrice}`
       );
+
+      // Record volume divergence signal
+      signalTracker.recordVolumeDivergence(
+        marketData.symbol,
+        volumeDivergence,
+        marketData.currentPrice
+      );
     }
 
     if (hasAnySignal) {
       await telegramService.sendMultiSignalAlert(multiSignalAlert);
+
+      // Record all detected signals
+      if (multiSignalAlert.rsiDivergence) {
+        signalTracker.recordRSIDivergence(
+          marketData.symbol,
+          multiSignalAlert.rsiDivergence,
+          marketData.currentPrice
+        );
+      }
+      if (multiSignalAlert.macdDivergence) {
+        signalTracker.recordMACDDivergence(
+          marketData.symbol,
+          multiSignalAlert.macdDivergence,
+          marketData.currentPrice
+        );
+      }
+      if (multiSignalAlert.marketStructure) {
+        signalTracker.recordMarketStructure(
+          marketData.symbol,
+          multiSignalAlert.marketStructure,
+          marketData.currentPrice
+        );
+      }
 
       // Log all detected signals
       const signals = [];
@@ -183,6 +222,16 @@ async function executeBotTask(): Promise<void> {
         }, RSI: ${rsiSignal.rsi.toFixed(2)}, Trend: ${
           structureSignal.trend
         } | ${volumeContext}`
+      );
+    }
+
+    // Update signal status and check for TP/SL hits
+    const updateResult = signalTracker.updateSignalStatus(
+      marketData.currentPrice
+    );
+    if (updateResult.updated > 0) {
+      console.log(
+        `📊 Signal Updates: ${updateResult.tpHit} TP, ${updateResult.slHit} SL, ${updateResult.expired} expired`
       );
     }
   } catch (error) {
@@ -250,9 +299,20 @@ async function initializeBot(): Promise<void> {
     console.log(`   - Volume Divergence Lookback: 3 candles`);
     console.log(`🎯 Smart TP/SL System: ENABLED`);
     console.log(tpslService.getConfigSummary());
+    console.log(`📊 Signal Tracking System: ENABLED`);
+    console.log(`📈 Statistics & Reporting: ENABLED`);
     console.log(`🔥 Multi-Confirmation Alerts: ENABLED`);
     console.log(`📊 Volume Spike Alerts: ENABLED (Independent)`);
     console.log(`📊 Volume Divergence Alerts: ENABLED (Independent)`);
+
+    // Show current statistics
+    const stats = signalTracker.getStatistics();
+    console.log(
+      `📊 Current Stats: ${stats.totalSignals} total, ${
+        stats.activeSignals
+      } active, ${stats.winRate.toFixed(1)}% win rate`
+    );
+
     console.log(
       `🕐 Next execution in ${scheduler.getSecondsUntilNextMinute()} seconds`
     );
