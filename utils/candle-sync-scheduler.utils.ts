@@ -122,10 +122,16 @@ export class CandleSyncScheduler {
       hourStart.setUTCMinutes(0, 0, 0);
       return hourStart;
     } else {
-      // Minute candles - start at the minute
-      const minuteStart = new Date(date);
-      minuteStart.setUTCSeconds(0, 0);
-      return minuteStart;
+      // Minute candles - calculate based on timeframe intervals
+      const epoch = new Date(0);
+      epoch.setUTCFullYear(1970, 0, 1);
+      epoch.setUTCHours(0, 0, 0, 0);
+
+      const timeSinceEpoch = timestamp - epoch.getTime();
+      const candleNumber = Math.floor(timeSinceEpoch / timeframeMs);
+      const candleStartTime = epoch.getTime() + candleNumber * timeframeMs;
+
+      return new Date(candleStartTime);
     }
   }
 
