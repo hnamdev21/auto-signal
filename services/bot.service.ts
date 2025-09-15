@@ -133,15 +133,15 @@ export class BotService {
   async sendStartupMessage(): Promise<void> {
     const alertConfig = this.alertService.getConfig();
     const startupMessage = `
-🚀 <b>Volume Alert Bot Đã Khởi Động</b>
+<b>VOLUME ALERT BOT STARTED</b>
 
-📊 <b>Pairs:</b> ${alertConfig.pairs.join(", ")}
-⏰ <b>Timeframes:</b> ${alertConfig.timeframes.join(", ")}
-🔥 <b>Volume Spike Threshold:</b> ${alertConfig.volumeSpikeThreshold}x
-⚠️ <b>Divergence Candles:</b> ${alertConfig.divergenceCandleCount}
+<b>Pairs:</b> ${alertConfig.pairs.join(", ")}
+<b>Timeframes:</b> ${alertConfig.timeframes.join(", ")}
+<b>Spike Threshold:</b> ${alertConfig.volumeSpikeThreshold}x
+<b>Divergence Candles:</b> ${alertConfig.divergenceCandleCount}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<i>Bot khởi động lúc: ${new Date().toISOString()}</i>
+<i>Started at: ${new Date().toISOString()}</i>
     `.trim();
 
     await this.telegramService.sendMessage(startupMessage);

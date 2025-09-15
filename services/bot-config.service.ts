@@ -60,10 +60,31 @@ export class BotConfigService {
    */
   getSmallestTimeframe(): string {
     return this.alertConfig.timeframes.reduce((smallest, current) => {
-      const smallestMs = parseInt(smallest.replace("m", "")) * 60 * 1000;
-      const currentMs = parseInt(current.replace("m", "")) * 60 * 1000;
+      const smallestMs = this.convertTimeframeToMs(smallest);
+      const currentMs = this.convertTimeframeToMs(current);
       return currentMs < smallestMs ? current : smallest;
     }, this.alertConfig.timeframes[0] || "5m");
+  }
+
+  /**
+   * Convert timeframe string to milliseconds
+   */
+  private convertTimeframeToMs(timeframe: string): number {
+    const unit = timeframe.slice(-1);
+    const value = parseInt(timeframe.slice(0, -1));
+
+    switch (unit) {
+      case "m": // minutes
+        return value * 60 * 1000;
+      case "h": // hours
+        return value * 60 * 60 * 1000;
+      case "d": // days
+        return value * 24 * 60 * 60 * 1000;
+      case "w": // weeks
+        return value * 7 * 24 * 60 * 60 * 1000;
+      default:
+        throw new Error(`Unsupported timeframe: ${timeframe}`);
+    }
   }
 
   /**

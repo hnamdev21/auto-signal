@@ -30,10 +30,10 @@ export class TelegramService {
    */
   async sendStartupMessage(timeframe: string = "5m"): Promise<void> {
     const message = `
-🚀 <b>Bot Trading Đa Tín Hiệu với Cảnh Báo Volume Đã Khởi Động</b>
+<b>VOLUME ALERT BOT STARTED</b>
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<i>Bot khởi động lúc: ${new Date().toISOString()}</i>
+<i>Started at: ${new Date().toISOString()}</i>
     `.trim();
 
     await this.sendMessage(message);
@@ -44,14 +44,14 @@ export class TelegramService {
    */
   async sendErrorMessage(error: string, context?: string): Promise<void> {
     const message = `
-❌ <b>Bot Error</b>
+<b>BOT ERROR</b>
 
 ${context ? `<b>Context:</b> ${context}\n` : ""}
 <b>Error:</b> ${error}
-🕐 <b>Time:</b> ${new Date().toISOString()}
+<b>Time:</b> ${new Date().toISOString()}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<i>Please check the bot logs for more details</i>
+<i>Check bot logs for more details</i>
     `.trim();
 
     await this.sendMessage(message);
@@ -62,10 +62,10 @@ ${context ? `<b>Context:</b> ${context}\n` : ""}
    */
   async sendHealthCheck(): Promise<void> {
     const message = `
-💚 <b>Bot Health Check</b>
+<b>BOT HEALTH CHECK</b>
 
-✅ Bot is running normally
-🕐 Last check: ${new Date().toISOString()}
+Bot is running normally
+Last check: ${new Date().toISOString()}
     `.trim();
 
     await this.sendMessage(message);
@@ -76,19 +76,18 @@ ${context ? `<b>Context:</b> ${context}\n` : ""}
    */
   async sendVolumeSpikeAlert(alert: VolumeAlert): Promise<void> {
     const message = `
-🚨 <b>VOLUME SPIKE DETECTED</b>
+<b>VOLUME SPIKE DETECTED</b>
 
-📊 <b>Symbol:</b> ${alert.symbol}
-⏰ <b>Timeframe:</b> ${alert.timeframe}
-💰 <b>Price:</b> $${alert.currentPrice.toFixed(2)}
-📈 <b>Volume:</b> ${alert.volume.toFixed(2)}
-📊 <b>Average Volume:</b> ${alert.averageVolume.toFixed(2)}
-🔥 <b>Spike Ratio:</b> ${alert.spikeRatio?.toFixed(2)}x
+<b>${alert.symbol}</b> | <b>${alert.timeframe}</b>
+<b>Price:</b> $${alert.currentPrice.toFixed(2)}
+<b>Volume:</b> ${alert.volume.toFixed(2)}
+<b>Average:</b> ${alert.averageVolume.toFixed(2)}
+<b>Spike:</b> <b>${alert.spikeRatio?.toFixed(2)}x</b>
 
-🕐 <b>Time:</b> ${new Date(alert.timestamp).toISOString()}
+<b>Time:</b> ${new Date(alert.timestamp).toISOString()}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<i>Volume spike detected - trading activity increased significantly</i>
+<i>Trading activity increased significantly</i>
     `.trim();
 
     await this.sendMessage(message);
@@ -104,30 +103,31 @@ ${context ? `<b>Context:</b> ${context}\n` : ""}
       alert.divergenceData;
 
     const message = `
-⚠️ <b>VOLUME DIVERGENCE DETECTED</b>
+<b>VOLUME DIVERGENCE DETECTED</b>
 
-📊 <b>Symbol:</b> ${alert.symbol}
-⏰ <b>Timeframe:</b> ${alert.timeframe}
-💰 <b>Current Price:</b> $${alert.currentPrice.toFixed(2)}
-🕯️ <b>Candles Analyzed:</b> ${candleCount}
+<b>${alert.symbol}</b> | <b>${alert.timeframe}</b>
+<b>Price:</b> $${alert.currentPrice.toFixed(2)}
+<b>Candles:</b> ${candleCount}
 
-📈 <b>Price Change:</b> ${priceChange > 0 ? "+" : ""}${priceChange.toFixed(2)}%
-📉 <b>Volume Change:</b> ${volumeChange.toFixed(2)}%
+<b>Price Change:</b> <b>${priceChange > 0 ? "+" : ""}${priceChange.toFixed(
+      2
+    )}%</b>
+<b>Volume Change:</b> <b>${volumeChange.toFixed(2)}%</b>
 
 <b>Recent Candles:</b>
 ${candles
   .map(
     (candle, index) =>
-      `${index + 1}. Price: $${candle.close.toFixed(
+      `${index + 1}. $${candle.close.toFixed(2)} | Vol: ${candle.volume.toFixed(
         2
-      )} | Volume: ${candle.volume.toFixed(2)}`
+      )}`
   )
   .join("\n")}
 
-🕐 <b>Time:</b> ${new Date(alert.timestamp).toISOString()}
+<b>Time:</b> ${new Date(alert.timestamp).toISOString()}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<i>⚠️ Warning: Price rising but volume declining - potential weakness</i>
+<i>Warning: Price rising but volume declining - potential weakness</i>
     `.trim();
 
     await this.sendMessage(message);
