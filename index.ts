@@ -2,8 +2,14 @@ import dotenv from "dotenv";
 import { MarketService } from "./services/market.service";
 import { TelegramService } from "./services/telegram.service";
 import { SignalService } from "./services/signal.service";
+import { MACDSignalService } from "./services/macd-signal.service";
+import { MarketStructureService } from "./services/market-structure.service";
 import { UTCScheduler } from "./utils/scheduler.utils";
-import { BotConfig, DivergenceConfig } from "./types/market.model";
+import {
+  BotConfig,
+  DivergenceConfig,
+  MultiSignalAlert,
+} from "./types/market.model";
 
 // Load environment variables
 dotenv.config();
@@ -35,6 +41,16 @@ const telegramService = new TelegramService(
   config.telegramChatId
 );
 const signalService = new SignalService(divergenceConfig);
+const macdSignalService = new MACDSignalService({
+  pivotLength: divergenceConfig.pivotLength,
+  tpPercent: divergenceConfig.tpPercent,
+  slPercent: divergenceConfig.slPercent,
+});
+const marketStructureService = new MarketStructureService({
+  pivotLength: divergenceConfig.pivotLength,
+  tpPercent: divergenceConfig.tpPercent,
+  slPercent: divergenceConfig.slPercent,
+});
 const scheduler = new UTCScheduler();
 
 // Validate configuration
@@ -58,32 +74,65 @@ async function executeBotTask(): Promise<void> {
     // Get market data
     const marketData = await marketService.getMarketData();
 
-    // Generate trading signal with divergence detection
-    const tradingSignal = signalService.generateTradingSignal(marketData);
+    // Generate signals from all services (running in parallel)
+    const [rsiSignal, macdSignal, structureSignal] = await Promise.all([
+      signalService.generateTradingSignal(marketData),
+      macdSignalService.generateMACDSignal(marketData),
+      marketStructureService.generateStructureSignal(marketData),
+    ]);
 
-    if (!tradingSignal) {
-      console.log("No trading signal generated");
+    if (!rsiSignal) {
+      console.log("No RSI signal generated");
       return;
     }
 
-    // Only send alerts when there's a divergence signal
-    if (tradingSignal.divergenceSignal) {
-      await telegramService.sendTradingSignal(tradingSignal);
+    // Create multi-signal alert
+    const multiSignalAlert: MultiSignalAlert = {
+      symbol: marketData.symbol,
+      currentPrice: marketData.currentPrice,
+      rsi: rsiSignal.rsi,
+      macd: macdSignal.macd,
+      timestamp: Date.now(),
+      timeframe: config.interval,
+      rsiDivergence: rsiSignal.divergenceSignal || null,
+      macdDivergence: macdSignal.divergenceSignal || null,
+      marketStructure: structureSignal.structureSignal || null,
+    };
+
+    // Check if any signals are detected
+    const hasAnySignal =
+      multiSignalAlert.rsiDivergence ||
+      multiSignalAlert.macdDivergence ||
+      multiSignalAlert.marketStructure;
+
+    if (hasAnySignal) {
+      await telegramService.sendMultiSignalAlert(multiSignalAlert);
+
+      // Log all detected signals
+      const signals = [];
+      if (multiSignalAlert.rsiDivergence) {
+        signals.push(`RSI ${multiSignalAlert.rsiDivergence.type}`);
+      }
+      if (multiSignalAlert.macdDivergence) {
+        signals.push(`MACD ${multiSignalAlert.macdDivergence.type}`);
+      }
+      if (multiSignalAlert.marketStructure) {
+        signals.push(
+          `STRUCTURE ${multiSignalAlert.marketStructure.structureType}`
+        );
+      }
+
       console.log(
-        `🎯 DIVERGENCE SIGNAL - ${
-          tradingSignal.divergenceSignal.type
-        } | Price: ${tradingSignal.currentPrice} | RSI: ${
-          tradingSignal.rsi
-        } | Confidence: ${tradingSignal.divergenceSignal.confidence.toFixed(
-          1
-        )}%`
+        `🎯 MULTIPLE SIGNALS DETECTED - ${signals.join(", ")} | Price: ${
+          marketData.currentPrice
+        } | RSI: ${rsiSignal.rsi.toFixed(2)}`
       );
     } else {
       // Just log regular monitoring without sending alerts
       console.log(
         `📊 Monitoring - Price: ${
-          tradingSignal.currentPrice
-        }, RSI: ${tradingSignal.rsi.toFixed(2)}`
+          marketData.currentPrice
+        }, RSI: ${rsiSignal.rsi.toFixed(2)}, Trend: ${structureSignal.trend}`
       );
     }
   } catch (error) {
@@ -130,17 +179,20 @@ async function initializeBot(): Promise<void> {
     // Start the scheduler
     scheduler.startMinuteScheduler(executeBotTask);
 
-    console.log("🎉 Bot initialized successfully!");
+    console.log("🎉 Multi-Signal Bot initialized successfully!");
     console.log(`📊 Monitoring: ${config.symbol}`);
     console.log(`📈 RSI Period: ${config.rsiPeriod}`);
     console.log(`⏰ Interval: ${config.interval}`);
-    console.log(`🎯 Divergence Detection: ENABLED`);
+    console.log(`🎯 RSI Divergence Detection: ENABLED`);
+    console.log(`📊 MACD Divergence Detection: ENABLED`);
+    console.log(`🏗️ Market Structure Detection: ENABLED`);
     console.log(`   - Pivot Length: ${divergenceConfig.pivotLength}`);
     console.log(`   - Bull RSI Level: ${divergenceConfig.bullRsiLevel}`);
     console.log(`   - Bear RSI Level: ${divergenceConfig.bearRsiLevel}`);
     console.log(
       `   - TP/SL: ${divergenceConfig.tpPercent}%/${divergenceConfig.slPercent}%`
     );
+    console.log(`🔥 Multi-Confirmation Alerts: ENABLED`);
     console.log(
       `🕐 Next execution in ${scheduler.getSecondsUntilNextMinute()} seconds`
     );

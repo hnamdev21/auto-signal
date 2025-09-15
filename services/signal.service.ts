@@ -41,7 +41,7 @@ export class SignalService {
       rsi: rsiData.rsi,
       divergenceSignal,
       timestamp: Date.now(),
-      timeframe: "1m",
+      timeframe: "5m",
     };
   }
 

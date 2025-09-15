@@ -76,3 +76,53 @@ export interface TradingSignal {
   timestamp: number;
   timeframe: string;
 }
+
+export interface MACDData {
+  macd: number;
+  signal: number;
+  histogram: number;
+  timestamp: number;
+}
+
+export interface MACDDivergenceSignal {
+  type: "BULLISH" | "BEARISH";
+  price: number;
+  macd: number;
+  timestamp: number;
+  takeProfit: number;
+  stopLoss: number;
+  confidence: number;
+}
+
+export interface MarketStructurePoint {
+  price: number;
+  index: number;
+  timestamp: number;
+  type: "HIGH" | "LOW";
+}
+
+export interface MarketStructureSignal {
+  type:
+    | "BULLISH_BREAK"
+    | "BEARISH_BREAK"
+    | "BULLISH_CONTINUATION"
+    | "BEARISH_CONTINUATION";
+  price: number;
+  structureType: "HH" | "HL" | "LH" | "LL";
+  timestamp: number;
+  takeProfit: number;
+  stopLoss: number;
+  confidence: number;
+}
+
+export interface MultiSignalAlert {
+  symbol: string;
+  currentPrice: number;
+  rsi: number;
+  macd?: MACDData | null;
+  timestamp: number;
+  timeframe: string;
+  rsiDivergence?: DivergenceSignal | null;
+  macdDivergence?: MACDDivergenceSignal | null;
+  marketStructure?: MarketStructureSignal | null;
+}
