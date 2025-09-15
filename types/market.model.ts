@@ -166,6 +166,7 @@ export interface VolumeDivergenceSignal {
   reversalProbability: "LOW" | "MEDIUM" | "HIGH";
   takeProfit: number;
   stopLoss: number;
+  method: string;
 }
 
 export interface TPSLConfig {
@@ -210,6 +211,18 @@ export interface TPSLResult {
   riskRewardRatio: number;
   method: string;
   confidence: number;
+  supportLevel?: SupportResistanceLevel;
+  resistanceLevel?: SupportResistanceLevel;
+}
+
+export interface SupportResistanceLevel {
+  price: number;
+  strength: number; // 1-10, based on touches and volume
+  type: "SUPPORT" | "RESISTANCE";
+  touches: number; // Number of times price touched this level
+  lastTouch: number; // Timestamp of last touch
+  volume: number; // Average volume at this level
+  isActive: boolean; // Whether this level is still relevant
 }
 
 export interface SignalRecord {

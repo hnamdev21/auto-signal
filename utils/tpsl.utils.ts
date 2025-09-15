@@ -1,4 +1,8 @@
 import { KlineData, TPSLConfig, TPSLResult } from "../types/market.model";
+import {
+  detectSupportResistance,
+  calculateDynamicTPSL,
+} from "./support-resistance.utils";
 
 /**
  * Calculate Average True Range (ATR) for dynamic stop loss
@@ -111,6 +115,34 @@ export function calculateRSIDivergenceTPSL(
   config: TPSLConfig["rsiDivergence"],
   klineData: KlineData[]
 ): TPSLResult {
+  // Try dynamic S/R-based TP/SL first
+  const srLevels = detectSupportResistance(klineData, {
+    lookbackPeriod: 100,
+    minTouches: 2,
+    tolerancePercent: 0.005,
+  });
+
+  if (srLevels.nearestSupport && srLevels.nearestResistance) {
+    const dynamicResult = calculateDynamicTPSL(
+      entryPrice,
+      isBullish,
+      srLevels.support,
+      srLevels.resistance,
+      {
+        tpBufferPercent: 0.002,
+        slBufferPercent: 0.001,
+        minRiskReward: 1.5,
+        maxRiskReward: 4.0,
+      }
+    );
+
+    // Use dynamic if confidence is good, otherwise fallback
+    if (dynamicResult.confidence >= 60) {
+      return dynamicResult as TPSLResult;
+    }
+  }
+
+  // Fallback to traditional ATR-based method
   const atr = calculateATR(klineData);
   const atrSL = atr * config.atrMultiplier;
 
@@ -160,6 +192,34 @@ export function calculateMACDDivergenceTPSL(
   config: TPSLConfig["macdDivergence"],
   klineData: KlineData[]
 ): TPSLResult {
+  // Try dynamic S/R-based TP/SL first
+  const srLevels = detectSupportResistance(klineData, {
+    lookbackPeriod: 100,
+    minTouches: 2,
+    tolerancePercent: 0.005,
+  });
+
+  if (srLevels.nearestSupport && srLevels.nearestResistance) {
+    const dynamicResult = calculateDynamicTPSL(
+      entryPrice,
+      isBullish,
+      srLevels.support,
+      srLevels.resistance,
+      {
+        tpBufferPercent: 0.002,
+        slBufferPercent: 0.001,
+        minRiskReward: 1.5,
+        maxRiskReward: 4.0,
+      }
+    );
+
+    // Use dynamic if confidence is good, otherwise fallback
+    if (dynamicResult.confidence >= 60) {
+      return dynamicResult as TPSLResult;
+    }
+  }
+
+  // Fallback to traditional ATR-based method
   const atr = calculateATR(klineData);
   const atrSL = atr * config.atrMultiplier;
 
@@ -207,6 +267,33 @@ export function calculateMarketStructureTPSL(
   config: TPSLConfig["marketStructure"],
   klineData: KlineData[]
 ): TPSLResult {
+  // Market Structure signals should always use S/R levels
+  const srLevels = detectSupportResistance(klineData, {
+    lookbackPeriod: 100,
+    minTouches: 2,
+    tolerancePercent: 0.005,
+  });
+
+  if (srLevels.nearestSupport && srLevels.nearestResistance) {
+    const isBullish = structureType === "HH" || structureType === "HL";
+
+    const dynamicResult = calculateDynamicTPSL(
+      entryPrice,
+      isBullish,
+      srLevels.support,
+      srLevels.resistance,
+      {
+        tpBufferPercent: 0.001, // Tighter buffer for structure signals
+        slBufferPercent: 0.0005,
+        minRiskReward: 1.5,
+        maxRiskReward: 4.0,
+      }
+    );
+
+    return dynamicResult as TPSLResult;
+  }
+
+  // Fallback to traditional method
   const atr = calculateATR(klineData);
   const { support, resistance } = calculateSupportResistance(klineData);
 
@@ -277,6 +364,49 @@ export function calculateVolumeSpikeTPSL(
   config: TPSLConfig["volumeSpike"],
   klineData: KlineData[]
 ): TPSLResult {
+  // Volume spikes can use S/R but with volume-based adjustments
+  const srLevels = detectSupportResistance(klineData, {
+    lookbackPeriod: 50, // Shorter lookback for volume spikes
+    minTouches: 2,
+    tolerancePercent: 0.005,
+  });
+
+  if (srLevels.nearestSupport && srLevels.nearestResistance) {
+    // Adjust buffer based on volume strength
+    let tpBuffer = 0.002;
+    let slBuffer = 0.001;
+
+    if (volumeRatio > 3) {
+      tpBuffer = 0.003;
+      slBuffer = 0.0005;
+    } else if (volumeRatio > 2) {
+      tpBuffer = 0.0025;
+      slBuffer = 0.0008;
+    } else {
+      tpBuffer = 0.0015;
+      slBuffer = 0.0012;
+    }
+
+    const dynamicResult = calculateDynamicTPSL(
+      entryPrice,
+      true, // Volume spikes are generally bullish
+      srLevels.support,
+      srLevels.resistance,
+      {
+        tpBufferPercent: tpBuffer,
+        slBufferPercent: slBuffer,
+        minRiskReward: 1.2,
+        maxRiskReward: 3.0,
+      }
+    );
+
+    // Use dynamic if confidence is good, otherwise fallback
+    if (dynamicResult.confidence >= 50) {
+      return dynamicResult as TPSLResult;
+    }
+  }
+
+  // Fallback to traditional method
   const atr = calculateATR(klineData);
 
   // Adjust TP/SL based on volume strength
@@ -334,6 +464,53 @@ export function calculateVolumeDivergenceTPSL(
   config: TPSLConfig["volumeDivergence"],
   klineData: KlineData[]
 ): TPSLResult {
+  // Volume divergence should use S/R with reversal-based adjustments
+  const srLevels = detectSupportResistance(klineData, {
+    lookbackPeriod: 100,
+    minTouches: 2,
+    tolerancePercent: 0.005,
+  });
+
+  if (srLevels.nearestSupport && srLevels.nearestResistance) {
+    // Adjust buffer based on reversal probability
+    let tpBuffer = 0.002;
+    let slBuffer = 0.001;
+
+    switch (reversalProbability) {
+      case "HIGH":
+        tpBuffer = 0.003;
+        slBuffer = 0.0005;
+        break;
+      case "MEDIUM":
+        tpBuffer = 0.002;
+        slBuffer = 0.001;
+        break;
+      case "LOW":
+        tpBuffer = 0.0015;
+        slBuffer = 0.0015;
+        break;
+    }
+
+    const dynamicResult = calculateDynamicTPSL(
+      entryPrice,
+      isBullish,
+      srLevels.support,
+      srLevels.resistance,
+      {
+        tpBufferPercent: tpBuffer,
+        slBufferPercent: slBuffer,
+        minRiskReward: 1.5,
+        maxRiskReward: 4.0,
+      }
+    );
+
+    // Use dynamic if confidence is good, otherwise fallback
+    if (dynamicResult.confidence >= 60) {
+      return dynamicResult as TPSLResult;
+    }
+  }
+
+  // Fallback to traditional method
   const atr = calculateATR(klineData);
 
   // Adjust TP/SL based on reversal probability

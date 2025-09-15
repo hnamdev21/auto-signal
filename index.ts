@@ -298,6 +298,7 @@ async function initializeBot(): Promise<void> {
     console.log(`   - Volume Thresholds: 1.5x/2.0x/3.0x/5.0x`);
     console.log(`   - Volume Divergence Lookback: 3 candles`);
     console.log(`🎯 Smart TP/SL System: ENABLED`);
+    console.log(`🎯 Dynamic S/R-Based TP/SL: ENABLED`);
     console.log(tpslService.getConfigSummary());
     console.log(`📊 Signal Tracking System: ENABLED`);
     console.log(`📈 Statistics & Reporting: ENABLED`);

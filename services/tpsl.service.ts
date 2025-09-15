@@ -161,6 +161,10 @@ export class TPSLService {
         return "Volume Spike Động";
       case "VOLUME_DIVERGENCE_REVERSAL":
         return "Volume Phân Kỳ + Đảo Chiều";
+      case "SUPPORT_RESISTANCE":
+        return "🎯 Hỗ Trợ/Kháng Cự Thông Minh";
+      case "PERCENTAGE_FALLBACK":
+        return "📊 Phần Trăm Dự Phòng";
       default:
         return "Phương Pháp Khác";
     }

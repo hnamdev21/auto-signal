@@ -18,5 +18,61 @@
       "priceDirection": "INCREASING",
       "volumeDirection": "DECREASING"
     }
+  },
+  {
+    "id": "SIG_1757930760580_qxzip",
+    "symbol": "BTCUSDT",
+    "signalType": "VOLUME_DIVERGENCE",
+    "signalSubType": "BULLISH",
+    "entryPrice": 114867.42,
+    "takeProfit": 117394.50324,
+    "stopLoss": 113603.87838,
+    "entryTime": 1757930760580,
+    "entryReason": "Volume BULLISH Divergence - HIGH reversal probability, Confidence: 100.0%",
+    "confidence": 100,
+    "status": "ACTIVE",
+    "riskRewardRatio": 2,
+    "metadata": {
+      "volumeRatio": 0.2984326373330078,
+      "reversalProbability": "HIGH",
+      "priceDirection": "DECREASING",
+      "volumeDirection": "DECREASING"
+    }
+  },
+  {
+    "id": "SIG_1757931360691_1b0ed",
+    "symbol": "BTCUSDT",
+    "signalType": "MARKET_STRUCTURE",
+    "signalSubType": "LH",
+    "entryPrice": 114911.36,
+    "takeProfit": 112613.13279999999,
+    "stopLoss": 116060.4736,
+    "entryTime": 1757931360691,
+    "entryReason": "Market Structure LH - BEARISH_CONTINUATION, Confidence: 4.0%",
+    "confidence": 4.048511997777516,
+    "status": "ACTIVE",
+    "riskRewardRatio": 2.000000000000013,
+    "metadata": {
+      "structureType": "LH",
+      "structureBreakType": "BEARISH_CONTINUATION"
+    }
+  },
+  {
+    "id": "SIG_1757931480554_yyh69",
+    "symbol": "BTCUSDT",
+    "signalType": "MARKET_STRUCTURE",
+    "signalSubType": "LH",
+    "entryPrice": 114876.74,
+    "takeProfit": 112579.2052,
+    "stopLoss": 116025.5074,
+    "entryTime": 1757931480554,
+    "entryReason": "Market Structure LH - BEARISH_CONTINUATION, Confidence: 4.0%",
+    "confidence": 4.048511997777516,
+    "status": "ACTIVE",
+    "riskRewardRatio": 2.000000000000013,
+    "metadata": {
+      "structureType": "LH",
+      "structureBreakType": "BEARISH_CONTINUATION"
+    }
   }
 ]

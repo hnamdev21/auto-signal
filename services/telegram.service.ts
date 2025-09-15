@@ -406,10 +406,11 @@ ${typeEmoji} <b>Cảnh Báo Phân Kỳ Volume - ${symbol}</b>
     }
 📊 <b>Độ Tin Cậy:</b> ${volumeDivergence.confidence.toFixed(1)}%
 
-🎯 <b>TP/SL Thông Minh:</b>
-📈 <b>Chốt Lời:</b> ${volumeDivergence.takeProfit.toLocaleString()} USDT
-🛡️ <b>Cắt Lỗ:</b> ${volumeDivergence.stopLoss.toLocaleString()} USDT
-📊 <b>Tỷ Lệ R/R:</b> ${riskRewardRatio.toFixed(2)}:1
+       🎯 <b>TP/SL Thông Minh:</b>
+       📈 <b>Chốt Lời:</b> ${volumeDivergence.takeProfit.toLocaleString()} USDT
+       🛡️ <b>Cắt Lỗ:</b> ${volumeDivergence.stopLoss.toLocaleString()} USDT
+       📊 <b>Tỷ Lệ R/R:</b> ${riskRewardRatio.toFixed(2)}:1
+       🎯 <b>Phương Pháp:</b> ${volumeDivergence.method || "Hỗ Trợ/Kháng Cự"}
 
 🕐 <b>Thời Gian:</b> ${time}
 

@@ -373,6 +373,7 @@ export function detectVolumeDivergence(
       reversalProbability,
       takeProfit,
       stopLoss,
+      method: "VOLUME_DIVERGENCE",
     };
   } catch (error) {
     console.error("Error detecting volume divergence:", error);
