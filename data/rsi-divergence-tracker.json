@@ -1,1 +1,1525 @@
-{}
+{
+  "BTCUSDT": {
+    "5m": {
+      "rsiData": [
+        {
+          "openTime": 1757981100000,
+          "close": 115248.68,
+          "rsi": 46.57589106928288,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757981400000,
+          "close": 115209.24,
+          "rsi": 43.90552163351079,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757981700000,
+          "close": 115247.88,
+          "rsi": 44.31590438792371,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757982000000,
+          "close": 115069.06,
+          "rsi": 31.82508708976124,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757982300000,
+          "close": 115026,
+          "rsi": 26.421941699411036,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757982600000,
+          "close": 115109.39,
+          "rsi": 29.953395886409695,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757982900000,
+          "close": 115171.94,
+          "rsi": 31.790347565107325,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757983200000,
+          "close": 115136.88,
+          "rsi": 30.254313307471165,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757983500000,
+          "close": 115054.61,
+          "rsi": 29.56040703895087,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757983800000,
+          "close": 114977.12,
+          "rsi": 29.439437737346125,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757984100000,
+          "close": 115088.66,
+          "rsi": 38.4425805115461,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757984400000,
+          "close": 115171.99,
+          "rsi": 38.96150568327716,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757984700000,
+          "close": 115197.99,
+          "rsi": 42.119424071804175,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757985000000,
+          "close": 115251.62,
+          "rsi": 48.96696639040833,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757985300000,
+          "close": 115278.67,
+          "rsi": 51.59136977724034,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757985600000,
+          "close": 115345.23,
+          "rsi": 57.01420480920933,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757985900000,
+          "close": 115424.16,
+          "rsi": 58.729498454955774,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757986200000,
+          "close": 115400.01,
+          "rsi": 69.35357481198979,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757986500000,
+          "close": 115166,
+          "rsi": 56.69241653600507,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757986800000,
+          "close": 115174.61,
+          "rsi": 53.357770959039506,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757987100000,
+          "close": 115140.64,
+          "rsi": 48.3396987057075,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757987400000,
+          "close": 115076.03,
+          "rsi": 46.87033893946385,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757987700000,
+          "close": 115024.24,
+          "rsi": 48.38743933649819,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757988000000,
+          "close": 115054.62,
+          "rsi": 54.33173850831695,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757988300000,
+          "close": 115099.84,
+          "rsi": 50.67492514247037,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757988600000,
+          "close": 115156.77,
+          "rsi": 49.05093285443472,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757988900000,
+          "close": 115099.87,
+          "rsi": 44.10860532699226,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757989200000,
+          "close": 115090.54,
+          "rsi": 39.78489168484613,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757989500000,
+          "close": 115152.88,
+          "rsi": 42.364609762908366,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757989800000,
+          "close": 115179.77,
+          "rsi": 39.44851159350137,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757990100000,
+          "close": 115104.48,
+          "rsi": 29.518720688860085,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757990400000,
+          "close": 115093.4,
+          "rsi": 30.021502573793413,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757990700000,
+          "close": 115098.18,
+          "rsi": 43.69843157659965,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757991000000,
+          "close": 115033.67,
+          "rsi": 38.13676307195062,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757991300000,
+          "close": 115034.47,
+          "rsi": 40.53490238031609,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757991600000,
+          "close": 115143.83,
+          "rsi": 55.59775429326293,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757991900000,
+          "close": 115082.15,
+          "rsi": 54.70438187460282,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757992200000,
+          "close": 115114,
+          "rsi": 54.8123054979253,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757992500000,
+          "close": 115124.42,
+          "rsi": 52.11110347670741,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757992800000,
+          "close": 115130.6,
+          "rsi": 47.53768276848423,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757993100000,
+          "close": 115189.34,
+          "rsi": 58.38912330051536,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757993400000,
+          "close": 115381.27,
+          "rsi": 70.30662848362061,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757993700000,
+          "close": 115376,
+          "rsi": 66.93433316129708,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757994000000,
+          "close": 115422.23,
+          "rsi": 67.87736683772658,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757994300000,
+          "close": 115367,
+          "rsi": 69.94650943682942,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757994600000,
+          "close": 115304.8,
+          "rsi": 64.90453763501554,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757994900000,
+          "close": 115307.25,
+          "rsi": 64.78885194878725,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757995200000,
+          "close": 115350.37,
+          "rsi": 73.10127505616623,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757995500000,
+          "close": 115268,
+          "rsi": 65.22300301161619,
+          "isClosed": true
+        },
+        {
+          "openTime": 1758010800000,
+          "close": 115820,
+          "rsi": 49.804458034924515,
+          "isClosed": true
+        }
+      ]
+    },
+    "15m": {
+      "rsiData": [
+        {
+          "openTime": 1757921400000,
+          "close": 115799.01,
+          "rsi": 57.043908009397185,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757922300000,
+          "close": 115806.62,
+          "rsi": 45.36222394190115,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757923200000,
+          "close": 115500,
+          "rsi": 34.91897293074031,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757924100000,
+          "close": 115651.03,
+          "rsi": 39.94127591422737,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757925000000,
+          "close": 115255.68,
+          "rsi": 30.126959057222678,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757925900000,
+          "close": 114737.27,
+          "rsi": 20.4757795485026,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757926800000,
+          "close": 114854,
+          "rsi": 22.094784995425215,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757927700000,
+          "close": 115089.83,
+          "rsi": 24.708295753974525,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757928600000,
+          "close": 114947.87,
+          "rsi": 21.535075140034266,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757929500000,
+          "close": 114868.59,
+          "rsi": 22.34023866964415,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757930400000,
+          "close": 114840.91,
+          "rsi": 23.176101330596197,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757931300000,
+          "close": 114781.11,
+          "rsi": 24.01302354255749,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757932200000,
+          "close": 114770.3,
+          "rsi": 20.49637143659031,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757933100000,
+          "close": 114769.04,
+          "rsi": 22.135907195468818,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757934000000,
+          "close": 115067.48,
+          "rsi": 34.4408948405018,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757934900000,
+          "close": 114919.37,
+          "rsi": 32.19310322681639,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757935800000,
+          "close": 115068.98,
+          "rsi": 40.76768196033064,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757936700000,
+          "close": 115070,
+          "rsi": 36.699797188102394,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757937600000,
+          "close": 114885.24,
+          "rsi": 40.61559507523969,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757938500000,
+          "close": 114794.01,
+          "rsi": 51.83444119700973,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757939400000,
+          "close": 114878.24,
+          "rsi": 50.80051782671315,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757940300000,
+          "close": 114721.04,
+          "rsi": 37.15366555430938,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757941200000,
+          "close": 114771.42,
+          "rsi": 43.43471175240578,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757942100000,
+          "close": 115042.44,
+          "rsi": 55.66083813617273,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757943000000,
+          "close": 114468.99,
+          "rsi": 41.06528549189963,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757943900000,
+          "close": 114664.08,
+          "rsi": 47.36015807922917,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757944800000,
+          "close": 114650.11,
+          "rsi": 47.29273753587084,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757945700000,
+          "close": 115017.56,
+          "rsi": 54.80517873439653,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757946600000,
+          "close": 114921.61,
+          "rsi": 46.9399656802898,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757947500000,
+          "close": 114679.56,
+          "rsi": 45.160066359625695,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757948400000,
+          "close": 114517.55,
+          "rsi": 38.92626344982174,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757949300000,
+          "close": 114672.84,
+          "rsi": 42.48963722731535,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757950200000,
+          "close": 114694.26,
+          "rsi": 46.15074534211548,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757951100000,
+          "close": 114842.9,
+          "rsi": 50.96310304749521,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757952000000,
+          "close": 114844.66,
+          "rsi": 49.3162789940057,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757952900000,
+          "close": 114682.01,
+          "rsi": 49.20707154843509,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757953800000,
+          "close": 114920.88,
+          "rsi": 52.8204044353531,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757954700000,
+          "close": 114662.57,
+          "rsi": 42.797061712383154,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757955600000,
+          "close": 114826.66,
+          "rsi": 58.02832708581172,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757956500000,
+          "close": 114732.11,
+          "rsi": 51.59919323369421,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757957400000,
+          "close": 114896.26,
+          "rsi": 55.404687355907804,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757958300000,
+          "close": 115120.03,
+          "rsi": 52.40144175560464,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757959200000,
+          "close": 114962.6,
+          "rsi": 50.93371723789186,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757960100000,
+          "close": 114942.34,
+          "rsi": 56.65872694100946,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757961000000,
+          "close": 114954.5,
+          "rsi": 61.98206597745886,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757961900000,
+          "close": 115307.79,
+          "rsi": 65.70608751576893,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757962800000,
+          "close": 115182.6,
+          "rsi": 61.48970411082689,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757963700000,
+          "close": 115100.71,
+          "rsi": 56.26247953477778,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757964600000,
+          "close": 115439.98,
+          "rsi": 62.423827570662866,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757965500000,
+          "close": 115307.78,
+          "rsi": 63.22740474247832,
+          "isClosed": true
+        }
+      ]
+    },
+    "1h": {
+      "rsiData": [
+        {
+          "openTime": 1757653200000,
+          "close": 115612.84,
+          "rsi": 71.34262804563724,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757656800000,
+          "close": 115318,
+          "rsi": 62.41861438846774,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757660400000,
+          "close": 115086.7,
+          "rsi": 57.15392323995577,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757664000000,
+          "close": 115048,
+          "rsi": 61.37421339888976,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757667600000,
+          "close": 115048.01,
+          "rsi": 60.04439866676032,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757671200000,
+          "close": 114980.85,
+          "rsi": 59.22672573184664,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757674800000,
+          "close": 114913.45,
+          "rsi": 56.837286672084424,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757678400000,
+          "close": 115083.97,
+          "rsi": 49.99944838542415,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757682000000,
+          "close": 115166.45,
+          "rsi": 43.420110857732475,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757685600000,
+          "close": 115260,
+          "rsi": 36.42378532050889,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757689200000,
+          "close": 115121.18,
+          "rsi": 42.94093327085802,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757692800000,
+          "close": 115495.56,
+          "rsi": 52.403987639788056,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757696400000,
+          "close": 115815.16,
+          "rsi": 63.515360441531136,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757700000000,
+          "close": 116486.18,
+          "rsi": 70.09166390140675,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757703600000,
+          "close": 116632.51,
+          "rsi": 68.91002221719437,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757707200000,
+          "close": 116157.33,
+          "rsi": 64.58968520224587,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757710800000,
+          "close": 115865.89,
+          "rsi": 63.26691843260385,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757714400000,
+          "close": 116027.46,
+          "rsi": 66.00707314362671,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757718000000,
+          "close": 116029.42,
+          "rsi": 66.02872532591195,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757721600000,
+          "close": 116209.32,
+          "rsi": 69.35116487878634,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757725200000,
+          "close": 115764.3,
+          "rsi": 61.977830771699765,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757728800000,
+          "close": 115886.17,
+          "rsi": 61.44979332709121,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757732400000,
+          "close": 115957,
+          "rsi": 61.321162719427626,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757736000000,
+          "close": 115698.4,
+          "rsi": 55.994770984433174,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757739600000,
+          "close": 115704.04,
+          "rsi": 58.27141292069455,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757743200000,
+          "close": 115749.99,
+          "rsi": 53.98180230429036,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757746800000,
+          "close": 115778.71,
+          "rsi": 49.37242383859676,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757750400000,
+          "close": 115978.01,
+          "rsi": 39.55375753912956,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757754000000,
+          "close": 116035.33,
+          "rsi": 37.25771348098859,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757757600000,
+          "close": 115937.99,
+          "rsi": 44.42013574430428,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757761200000,
+          "close": 115974.11,
+          "rsi": 53.16406843884126,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757764800000,
+          "close": 116002.91,
+          "rsi": 49.221805917444776,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757768400000,
+          "close": 115761.05,
+          "rsi": 42.616121985175766,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757772000000,
+          "close": 115797.68,
+          "rsi": 37.70489844683351,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757775600000,
+          "close": 115768.68,
+          "rsi": 50.17408861826063,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757779200000,
+          "close": 115334,
+          "rsi": 32.42381222187559,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757782800000,
+          "close": 115571.78,
+          "rsi": 38.916063392682354,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757786400000,
+          "close": 115633.92,
+          "rsi": 47.90823211875855,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757790000000,
+          "close": 115797.12,
+          "rsi": 52.73951637588009,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757793600000,
+          "close": 115905.88,
+          "rsi": 54.42454517072067,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757797200000,
+          "close": 115895.39,
+          "rsi": 53.346296360027814,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757800800000,
+          "close": 115871.58,
+          "rsi": 46.606034708182335,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757804400000,
+          "close": 115918.29,
+          "rsi": 46.24226234813623,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757808000000,
+          "close": 115935.6,
+          "rsi": 49.91910863811441,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757811600000,
+          "close": 115962.93,
+          "rsi": 49.61933946203583,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757815200000,
+          "close": 115852.95,
+          "rsi": 45.161581745908556,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757818800000,
+          "close": 115679.98,
+          "rsi": 47.262609823134675,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757822400000,
+          "close": 115750.99,
+          "rsi": 48.459248797165074,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757826000000,
+          "close": 115860.01,
+          "rsi": 52.862668396868166,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757829600000,
+          "close": 115734.23,
+          "rsi": 65.55753368214002,
+          "isClosed": true
+        }
+      ]
+    },
+    "4h": {
+      "rsiData": [
+        {
+          "openTime": 1756584000000,
+          "close": 108816.33,
+          "rsi": 21.039639596405465,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756598400000,
+          "close": 109223.84,
+          "rsi": 28.744510528037054,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756612800000,
+          "close": 108708.26,
+          "rsi": 18.62108560517582,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756627200000,
+          "close": 108389.76,
+          "rsi": 20.429171224187073,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756641600000,
+          "close": 108818.69,
+          "rsi": 36.19379215660118,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756656000000,
+          "close": 108930,
+          "rsi": 36.65818161063869,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756670400000,
+          "close": 108246.35,
+          "rsi": 47.913061122184835,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756684800000,
+          "close": 107660.01,
+          "rsi": 42.66628403800778,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756699200000,
+          "close": 109432.99,
+          "rsi": 59.826699906721885,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756713600000,
+          "close": 108782.88,
+          "rsi": 52.907247825518226,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756728000000,
+          "close": 108784.33,
+          "rsi": 52.213086714331716,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756742400000,
+          "close": 109217.64,
+          "rsi": 54.368638565710405,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756756800000,
+          "close": 109237.42,
+          "rsi": 53.070648994668325,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756771200000,
+          "close": 110322.18,
+          "rsi": 60.630553313948695,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756785600000,
+          "close": 110233.92,
+          "rsi": 59.97955640784118,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756800000000,
+          "close": 109733.34,
+          "rsi": 53.54038751782354,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756814400000,
+          "close": 110829.17,
+          "rsi": 63.6379068879175,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756828800000,
+          "close": 110806,
+          "rsi": 66.15034369544121,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756843200000,
+          "close": 111240.01,
+          "rsi": 66.17331548558951,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756857600000,
+          "close": 111054.01,
+          "rsi": 64.04725782152127,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756872000000,
+          "close": 111099.88,
+          "rsi": 70.61069419064056,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756886400000,
+          "close": 111437.77,
+          "rsi": 78.30206772550201,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756900800000,
+          "close": 112222.74,
+          "rsi": 74.53178778014035,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756915200000,
+          "close": 112193.74,
+          "rsi": 83.67167632796836,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756929600000,
+          "close": 111705.71,
+          "rsi": 76.31181707154522,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756944000000,
+          "close": 111148.97,
+          "rsi": 67.01645318235245,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756958400000,
+          "close": 110463.36,
+          "rsi": 59.6671986777527,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756972800000,
+          "close": 110810,
+          "rsi": 54.35351443972448,
+          "isClosed": true
+        },
+        {
+          "openTime": 1756987200000,
+          "close": 109510.31,
+          "rsi": 44.6902934093334,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757001600000,
+          "close": 109799.99,
+          "rsi": 50.50468489943412,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757016000000,
+          "close": 110730.87,
+          "rsi": 49.23658549465841,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757030400000,
+          "close": 111311.77,
+          "rsi": 53.61475490679556,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757044800000,
+          "close": 112954.32,
+          "rsi": 60.44744010872152,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757059200000,
+          "close": 112354,
+          "rsi": 57.541621368246275,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757073600000,
+          "close": 110716.82,
+          "rsi": 48.12410872392774,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757088000000,
+          "close": 111614.54,
+          "rsi": 50.82066609655971,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757102400000,
+          "close": 110659.99,
+          "rsi": 42.85729956332516,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757116800000,
+          "close": 111082.22,
+          "rsi": 45.095969899547484,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757131200000,
+          "close": 110825.6,
+          "rsi": 46.03600836297697,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757145600000,
+          "close": 110781.02,
+          "rsi": 48.262608424661096,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757160000000,
+          "close": 110384.15,
+          "rsi": 49.61550074220344,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757174400000,
+          "close": 110038.41,
+          "rsi": 46.25423927934437,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757188800000,
+          "close": 110187.97,
+          "rsi": 53.70331104402705,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757203200000,
+          "close": 110629.15,
+          "rsi": 54.4574276842621,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757217600000,
+          "close": 110753.42,
+          "rsi": 50.132736538866816,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757232000000,
+          "close": 111292.13,
+          "rsi": 49.883815581490005,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757246400000,
+          "close": 111329.99,
+          "rsi": 38.13905736346251,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757260800000,
+          "close": 111259.99,
+          "rsi": 41.340843144052535,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757275200000,
+          "close": 111137.34,
+          "rsi": 54.378099922124456,
+          "isClosed": true
+        },
+        {
+          "openTime": 1757289600000,
+          "close": 111052.11,
+          "rsi": 42.95209333216383,
+          "isClosed": true
+        }
+      ]
+    },
+    "1d": {
+      "rsiData": [
+        {
+          "openTime": 1749427200000,
+          "close": 110263.02,
+          "rsi": 52.02744416652348,
+          "isClosed": true
+        },
+        {
+          "openTime": 1749513600000,
+          "close": 110274.39,
+          "rsi": 53.350564838301686,
+          "isClosed": true
+        },
+        {
+          "openTime": 1749600000000,
+          "close": 108645.12,
+          "rsi": 52.11467146097358,
+          "isClosed": true
+        },
+        {
+          "openTime": 1749686400000,
+          "close": 105671.73,
+          "rsi": 50.193399595932135,
+          "isClosed": true
+        },
+        {
+          "openTime": 1749772800000,
+          "close": 106066.59,
+          "rsi": 55.206666983570216,
+          "isClosed": true
+        },
+        {
+          "openTime": 1749859200000,
+          "close": 105414.64,
+          "rsi": 52.05375775064151,
+          "isClosed": true
+        },
+        {
+          "openTime": 1749945600000,
+          "close": 105594.01,
+          "rsi": 49.872331008219675,
+          "isClosed": true
+        },
+        {
+          "openTime": 1750032000000,
+          "close": 106794.53,
+          "rsi": 52.3245689368449,
+          "isClosed": true
+        },
+        {
+          "openTime": 1750118400000,
+          "close": 104551.17,
+          "rsi": 48.11536593471203,
+          "isClosed": true
+        },
+        {
+          "openTime": 1750204800000,
+          "close": 104886.78,
+          "rsi": 50.44039992171492,
+          "isClosed": true
+        },
+        {
+          "openTime": 1750291200000,
+          "close": 104658.59,
+          "rsi": 58.46648493218286,
+          "isClosed": true
+        },
+        {
+          "openTime": 1750377600000,
+          "close": 103297.99,
+          "rsi": 47.11794807330705,
+          "isClosed": true
+        },
+        {
+          "openTime": 1750464000000,
+          "close": 102120.01,
+          "rsi": 39.96294160378165,
+          "isClosed": true
+        },
+        {
+          "openTime": 1750550400000,
+          "close": 100963.87,
+          "rsi": 36.80215896407794,
+          "isClosed": true
+        },
+        {
+          "openTime": 1750636800000,
+          "close": 105333.93,
+          "rsi": 36.2413308568739,
+          "isClosed": true
+        },
+        {
+          "openTime": 1750723200000,
+          "close": 106083,
+          "rsi": 38.763252418048545,
+          "isClosed": true
+        },
+        {
+          "openTime": 1750809600000,
+          "close": 107340.58,
+          "rsi": 46.43152569003891,
+          "isClosed": true
+        },
+        {
+          "openTime": 1750896000000,
+          "close": 106947.06,
+          "rsi": 54.06186838365456,
+          "isClosed": true
+        },
+        {
+          "openTime": 1750982400000,
+          "close": 107047.59,
+          "rsi": 53.18413864018779,
+          "isClosed": true
+        },
+        {
+          "openTime": 1751068800000,
+          "close": 107296.79,
+          "rsi": 56.27310983466572,
+          "isClosed": true
+        },
+        {
+          "openTime": 1751155200000,
+          "close": 108356.93,
+          "rsi": 58.69800094443569,
+          "isClosed": true
+        },
+        {
+          "openTime": 1751241600000,
+          "close": 107146.5,
+          "rsi": 51.10735250349067,
+          "isClosed": true
+        },
+        {
+          "openTime": 1751328000000,
+          "close": 105681.14,
+          "rsi": 53.73805527308046,
+          "isClosed": true
+        },
+        {
+          "openTime": 1751414400000,
+          "close": 108849.6,
+          "rsi": 61.040181063850426,
+          "isClosed": true
+        },
+        {
+          "openTime": 1751500800000,
+          "close": 109584.78,
+          "rsi": 63.347033881084315,
+          "isClosed": true
+        },
+        {
+          "openTime": 1751587200000,
+          "close": 107984.24,
+          "rsi": 62.53397445944435,
+          "isClosed": true
+        },
+        {
+          "openTime": 1751673600000,
+          "close": 108198.12,
+          "rsi": 67.14066313256167,
+          "isClosed": true
+        },
+        {
+          "openTime": 1751760000000,
+          "close": 109203.84,
+          "rsi": 73.4360770139599,
+          "isClosed": true
+        },
+        {
+          "openTime": 1751846400000,
+          "close": 108262.94,
+          "rsi": 60.34948563691349,
+          "isClosed": true
+        },
+        {
+          "openTime": 1751932800000,
+          "close": 108922.98,
+          "rsi": 60.09843914011897,
+          "isClosed": true
+        },
+        {
+          "openTime": 1752019200000,
+          "close": 111233.99,
+          "rsi": 62.87936878221574,
+          "isClosed": true
+        },
+        {
+          "openTime": 1752105600000,
+          "close": 116010,
+          "rsi": 73.24140654651394,
+          "isClosed": true
+        },
+        {
+          "openTime": 1752192000000,
+          "close": 117527.66,
+          "rsi": 75.05451951346748,
+          "isClosed": true
+        },
+        {
+          "openTime": 1752278400000,
+          "close": 117420,
+          "rsi": 74.36628044398043,
+          "isClosed": true
+        },
+        {
+          "openTime": 1752364800000,
+          "close": 119086.64,
+          "rsi": 75.09346574684433,
+          "isClosed": true
+        },
+        {
+          "openTime": 1752451200000,
+          "close": 119841.18,
+          "rsi": 80.33579307576136,
+          "isClosed": true
+        },
+        {
+          "openTime": 1752537600000,
+          "close": 117758.09,
+          "rsi": 78.03204351820433,
+          "isClosed": true
+        },
+        {
+          "openTime": 1752624000000,
+          "close": 118630.43,
+          "rsi": 75.41107631457388,
+          "isClosed": true
+        },
+        {
+          "openTime": 1752710400000,
+          "close": 119177.56,
+          "rsi": 75.16844062808941,
+          "isClosed": true
+        },
+        {
+          "openTime": 1752796800000,
+          "close": 117924.84,
+          "rsi": 76.56587565355058,
+          "isClosed": true
+        },
+        {
+          "openTime": 1752883200000,
+          "close": 117840,
+          "rsi": 75.94651324252033,
+          "isClosed": true
+        },
+        {
+          "openTime": 1752969600000,
+          "close": 117265.12,
+          "rsi": 72.20804365529332,
+          "isClosed": true
+        },
+        {
+          "openTime": 1753056000000,
+          "close": 117380.36,
+          "rsi": 76.31472309770373,
+          "isClosed": true
+        },
+        {
+          "openTime": 1753142400000,
+          "close": 119954.42,
+          "rsi": 78.67123197950703,
+          "isClosed": true
+        },
+        {
+          "openTime": 1753228800000,
+          "close": 118755.99,
+          "rsi": 70.75007006803773,
+          "isClosed": true
+        },
+        {
+          "openTime": 1753315200000,
+          "close": 118340.99,
+          "rsi": 58.46756411364822,
+          "isClosed": true
+        },
+        {
+          "openTime": 1753401600000,
+          "close": 117614.31,
+          "rsi": 50.3339564103058,
+          "isClosed": true
+        },
+        {
+          "openTime": 1753488000000,
+          "close": 117919.99,
+          "rsi": 51.89803261188938,
+          "isClosed": true
+        },
+        {
+          "openTime": 1753574400000,
+          "close": 119415.55,
+          "rsi": 51.265019972785026,
+          "isClosed": true
+        },
+        {
+          "openTime": 1753660800000,
+          "close": 118062.32,
+          "rsi": 43.4595349028744,
+          "isClosed": true
+        }
+      ],
+      "lastAlertTime": 1758011100373
+    }
+  }
+}

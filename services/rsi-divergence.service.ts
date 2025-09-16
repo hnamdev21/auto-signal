@@ -132,42 +132,43 @@ export class RSIDivergenceService {
     peaks: Array<{ index: number; rsi: number; price: number; time: number }>;
     troughs: Array<{ index: number; rsi: number; price: number; time: number }>;
   } {
-    const peaks: Array<{
+    const rsiPeaks: Array<{
       index: number;
       rsi: number;
       price: number;
       time: number;
     }> = [];
-    const troughs: Array<{
+    const rsiTroughs: Array<{
       index: number;
       rsi: number;
       price: number;
       time: number;
     }> = [];
 
+    // Find RSI peaks and troughs
     for (let i = lookback; i < rsiData.length - lookback; i++) {
       const current = rsiData[i];
       if (!current) continue;
 
-      let isPeak = true;
-      let isTrough = true;
+      let isRSIPeak = true;
+      let isRSITrough = true;
 
-      // Check if current point is a peak
+      // Check if current point is a peak/trough in RSI
       for (let j = i - lookback; j <= i + lookback; j++) {
         if (j === i) continue;
         const compare = rsiData[j];
         if (!compare) continue;
 
         if (current.rsi <= compare.rsi) {
-          isPeak = false;
+          isRSIPeak = false;
         }
         if (current.rsi >= compare.rsi) {
-          isTrough = false;
+          isRSITrough = false;
         }
       }
 
-      if (isPeak) {
-        peaks.push({
+      if (isRSIPeak) {
+        rsiPeaks.push({
           index: i,
           rsi: current.rsi,
           price: current.close,
@@ -175,8 +176,8 @@ export class RSIDivergenceService {
         });
       }
 
-      if (isTrough) {
-        troughs.push({
+      if (isRSITrough) {
+        rsiTroughs.push({
           index: i,
           rsi: current.rsi,
           price: current.close,
@@ -185,7 +186,7 @@ export class RSIDivergenceService {
       }
     }
 
-    return { peaks, troughs };
+    return { peaks: rsiPeaks, troughs: rsiTroughs };
   }
 
   /**
@@ -215,14 +216,23 @@ export class RSIDivergenceService {
     // Update tracker with RSI data
     this.updateTrackerWithRSIData(symbol, timeframe, klineData, rsiValues);
 
-    // Get recent RSI data for divergence analysis
-    const recentRSIData = tracker.rsiData.slice(
-      -this.config.rsiDivergenceLookback
+    // Get updated tracker after RSI data update
+    const updatedTracker = this.divergenceTracker[symbol]?.[timeframe];
+    if (!updatedTracker) return null;
+
+    // Get recent RSI data for divergence analysis (get the most recent data)
+    const recentRSIData = updatedTracker.rsiData.slice(
+      0,
+      this.config.rsiDivergenceLookback
     );
     if (recentRSIData.length < this.config.rsiDivergenceLookback) return null;
 
-    // Find peaks and troughs
-    const { peaks, troughs } = this.findRSIPeaksAndTroughs(recentRSIData);
+    // Find peaks and troughs with smaller lookback for more sensitive detection
+    const { peaks, troughs } = this.findRSIPeaksAndTroughs(recentRSIData, 2);
+
+    // Debug logging (can be enabled for troubleshooting)
+    // console.log(`🔍 RSI Divergence Debug for ${symbol} ${timeframe}:`);
+    // console.log(`Peaks found: ${peaks.length}, Troughs found: ${troughs.length}`);
 
     // Check for divergence patterns
     const divergence = this.checkRSIDivergencePattern(peaks, troughs);
@@ -295,15 +305,18 @@ export class RSIDivergenceService {
         const rsiChange =
           ((latestPeak.rsi - previousPeak.rsi) / previousPeak.rsi) * 100;
 
-        return {
-          type: "bearish",
-          priceHigh: latestPeak.price,
-          priceLow: previousPeak.price,
-          rsiHigh: previousPeak.rsi,
-          rsiLow: latestPeak.rsi,
-          priceChange,
-          rsiChange,
-        };
+        // Additional validation: ensure the divergence is significant
+        if (Math.abs(priceChange) > 0.1 && Math.abs(rsiChange) > 0.5) {
+          return {
+            type: "bearish",
+            priceHigh: latestPeak.price,
+            priceLow: previousPeak.price,
+            rsiHigh: previousPeak.rsi,
+            rsiLow: latestPeak.rsi,
+            priceChange,
+            rsiChange,
+          };
+        }
       }
     }
 
@@ -324,15 +337,18 @@ export class RSIDivergenceService {
         const rsiChange =
           ((latestTrough.rsi - previousTrough.rsi) / previousTrough.rsi) * 100;
 
-        return {
-          type: "bullish",
-          priceHigh: previousTrough.price,
-          priceLow: latestTrough.price,
-          rsiHigh: latestTrough.rsi,
-          rsiLow: previousTrough.rsi,
-          priceChange,
-          rsiChange,
-        };
+        // Additional validation: ensure the divergence is significant
+        if (Math.abs(priceChange) > 0.1 && Math.abs(rsiChange) > 0.5) {
+          return {
+            type: "bullish",
+            priceHigh: previousTrough.price,
+            priceLow: latestTrough.price,
+            rsiHigh: latestTrough.rsi,
+            rsiLow: previousTrough.rsi,
+            priceChange,
+            rsiChange,
+          };
+        }
       }
     }
 
@@ -355,6 +371,8 @@ export class RSIDivergenceService {
     const rsiOffset = this.config.rsiPeriod;
 
     // Update RSI data
+    // console.log(`🔧 Updating tracker with ${rsiValues.length} RSI values`);
+
     for (let i = 0; i < rsiValues.length; i++) {
       const candleIndex = i + rsiOffset;
       const candle = klineData[candleIndex];
@@ -388,6 +406,8 @@ export class RSIDivergenceService {
         }
       }
     }
+
+    // console.log(`Tracker after update: ${tracker.rsiData.length} entries`);
 
     // Keep only recent RSI data (last 50 to avoid memory issues)
     if (tracker.rsiData.length > 50) {

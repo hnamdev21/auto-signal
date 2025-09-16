@@ -1,7 +1,7 @@
 import { MultiPairMarketService } from "./multi-pair-market.service";
 import { AlertService } from "./alert.service";
 import { TelegramService } from "./telegram.service";
-import { VolumeAlert, RSIAlert } from "../types/market.model";
+import { VolumeAlert, RSIAlert, ScalpingAlert } from "../types/market.model";
 
 export class BotService {
   private multiPairMarketService: MultiPairMarketService;
@@ -58,7 +58,9 @@ export class BotService {
   /**
    * Log detailed information about detected alerts
    */
-  private logAlertDetails(alerts: (VolumeAlert | RSIAlert)[]): void {
+  private logAlertDetails(
+    alerts: (VolumeAlert | RSIAlert | ScalpingAlert)[]
+  ): void {
     alerts.forEach((alert) => {
       if (alert.type === "rsi_divergence") {
         const rsiAlert = alert as RSIAlert;
@@ -71,6 +73,24 @@ export class BotService {
             rsiValue: rsiAlert.rsiValue,
             divergenceType: rsiAlert.divergenceType,
             divergenceData: rsiAlert.divergenceData,
+          }
+        );
+      } else if (
+        alert.type === "ema_crossover" ||
+        alert.type === "stochastic_signal" ||
+        alert.type === "bollinger_squeeze" ||
+        alert.type === "volume_spike"
+      ) {
+        const scalpingAlert = alert as ScalpingAlert;
+        console.log(
+          `🚀 ${alert.type.toUpperCase()} alert for ${alert.symbol} ${
+            alert.timeframe
+          }:`,
+          {
+            price: alert.currentPrice,
+            signal: scalpingAlert.signal,
+            confidence: scalpingAlert.confidence,
+            indicatorData: scalpingAlert.indicatorData,
           }
         );
       } else {
@@ -149,7 +169,7 @@ export class BotService {
   async sendStartupMessage(): Promise<void> {
     const alertConfig = this.alertService.getConfig();
     const startupMessage = `
-<b>BOT CẢNH BÁO VOLUME & RSI ĐÃ KHỞI ĐỘNG</b>
+<b>BOT CẢNH BÁO VOLUME, RSI & SCALPING ĐÃ KHỞI ĐỘNG</b>
 
 <b>Cặp tiền:</b> ${alertConfig.pairs.join(", ")}
 <b>Khung thời gian:</b> ${alertConfig.timeframes.join(", ")}
@@ -158,6 +178,12 @@ export class BotService {
 <b>RSI Period:</b> ${alertConfig.rsiPeriod}
 <b>RSI Overbought:</b> ${alertConfig.rsiOverbought}
 <b>RSI Oversold:</b> ${alertConfig.rsiOversold}
+
+<b>🚀 SCALPING (1m):</b>
+• EMA Crossover (9/21)
+• Stochastic Oscillator
+• Bollinger Bands
+• Volume Spike Detection
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 <i>Khởi động lúc: ${new Date().toISOString()}</i>

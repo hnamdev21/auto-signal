@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { VolumeAlert, RSIAlert } from "../types/market.model";
+import { VolumeAlert, RSIAlert, ScalpingAlert } from "../types/market.model";
 
 export class TelegramService {
   private bot: TelegramBot;
@@ -176,9 +176,73 @@ ${candles
   }
 
   /**
+   * Send scalping alert
+   */
+  async sendScalpingAlert(alert: ScalpingAlert): Promise<void> {
+    const { type, signal, confidence, indicatorData } = alert;
+
+    let signalEmoji = signal === "buy" ? "🟢" : "🔴";
+    let signalText = signal === "buy" ? "MUA" : "BÁN";
+
+    let indicatorDetails = "";
+
+    switch (type) {
+      case "ema_crossover":
+        indicatorDetails = `
+<b>EMA Crossover:</b>
+• EMA 9: ${indicatorData.ema9?.toFixed(4) || "N/A"}
+• EMA 21: ${indicatorData.ema21?.toFixed(4) || "N/A"}`;
+        break;
+
+      case "stochastic_signal":
+        indicatorDetails = `
+<b>Stochastic Oscillator:</b>
+• %K: ${indicatorData.stochasticK?.toFixed(2) || "N/A"}
+• %D: ${indicatorData.stochasticD?.toFixed(2) || "N/A"}`;
+        break;
+
+      case "bollinger_squeeze":
+        indicatorDetails = `
+<b>Bollinger Bands:</b>
+• Upper: $${indicatorData.bollingerUpper?.toFixed(4) || "N/A"}
+• Middle: $${indicatorData.bollingerMiddle?.toFixed(4) || "N/A"}
+• Lower: $${indicatorData.bollingerLower?.toFixed(4) || "N/A"}`;
+        break;
+
+      case "volume_spike":
+        indicatorDetails = `
+<b>Volume Spike:</b>
+• Volume: ${indicatorData.volume?.toFixed(2) || "N/A"}
+• Average: ${indicatorData.averageVolume?.toFixed(2) || "N/A"}`;
+        break;
+    }
+
+    const message = `
+<b>🚀 TÍN HIỆU SCALPING</b>
+
+<b>${alert.symbol}</b> | <b>${alert.timeframe}</b>
+<b>Giá:</b> $${alert.currentPrice.toFixed(4)}
+<b>Tín hiệu:</b> ${signalEmoji} <b>${signalText}</b>
+<b>Độ tin cậy:</b> ${confidence.toFixed(0)}%
+<b>Chỉ báo:</b> ${type.replace("_", " ").toUpperCase()}
+
+${indicatorDetails}
+
+<b>Thời gian:</b> ${new Date(alert.timestamp).toISOString()}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<i>⚡ Scalping signal - Khung thời gian 1 phút</i>
+    `.trim();
+
+    await this.sendMessage(message);
+  }
+
+  /**
    * Send multiple alerts
    */
-  async sendAlerts(alerts: (VolumeAlert | RSIAlert)[]): Promise<void> {
+  async sendAlerts(
+    alerts: (VolumeAlert | RSIAlert | ScalpingAlert)[]
+  ): Promise<void> {
     for (const alert of alerts) {
       try {
         if (alert.type === "spike") {
@@ -187,6 +251,13 @@ ${candles
           await this.sendVolumeDivergenceAlert(alert as VolumeAlert);
         } else if (alert.type === "rsi_divergence") {
           await this.sendRSIDivergenceAlert(alert as RSIAlert);
+        } else if (
+          alert.type === "ema_crossover" ||
+          alert.type === "stochastic_signal" ||
+          alert.type === "bollinger_squeeze" ||
+          alert.type === "volume_spike"
+        ) {
+          await this.sendScalpingAlert(alert as ScalpingAlert);
         }
 
         // Small delay between alerts to avoid rate limiting
