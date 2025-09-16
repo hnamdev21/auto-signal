@@ -38,6 +38,12 @@ export class BotConfigService {
       divergenceCandleCount: parseInt(
         process.env.DIVERGENCE_CANDLE_COUNT || "3"
       ),
+      rsiPeriod: parseInt(process.env.RSI_PERIOD || "14"),
+      rsiOverbought: parseFloat(process.env.RSI_OVERBOUGHT || "70"),
+      rsiOversold: parseFloat(process.env.RSI_OVERSOLD || "30"),
+      rsiDivergenceLookback: parseInt(
+        process.env.RSI_DIVERGENCE_LOOKBACK || "20"
+      ),
     };
   }
 

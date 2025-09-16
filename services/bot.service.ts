@@ -1,7 +1,7 @@
 import { MultiPairMarketService } from "./multi-pair-market.service";
 import { AlertService } from "./alert.service";
 import { TelegramService } from "./telegram.service";
-import { VolumeAlert } from "../types/market.model";
+import { VolumeAlert, RSIAlert } from "../types/market.model";
 
 export class BotService {
   private multiPairMarketService: MultiPairMarketService;
@@ -37,15 +37,15 @@ export class BotService {
       const alerts = this.alertService.processMarketData(marketData);
 
       if (alerts.length > 0) {
-        console.log(`🚨 Found ${alerts.length} volume alerts`);
+        console.log(`🚨 Found ${alerts.length} alerts`);
 
         // Send alerts to Telegram
-        await this.telegramService.sendVolumeAlerts(alerts);
+        await this.telegramService.sendAlerts(alerts);
 
         // Log alert details
         this.logAlertDetails(alerts);
       } else {
-        console.log("✅ No volume alerts detected");
+        console.log("✅ No alerts detected");
       }
 
       // Log current status
@@ -58,20 +58,36 @@ export class BotService {
   /**
    * Log detailed information about detected alerts
    */
-  private logAlertDetails(alerts: VolumeAlert[]): void {
+  private logAlertDetails(alerts: (VolumeAlert | RSIAlert)[]): void {
     alerts.forEach((alert) => {
-      console.log(
-        `📊 ${alert.type.toUpperCase()} alert for ${alert.symbol} ${
-          alert.timeframe
-        }:`,
-        {
-          price: alert.currentPrice,
-          volume: alert.volume,
-          averageVolume: alert.averageVolume,
-          spikeRatio: alert.spikeRatio,
-          divergenceData: alert.divergenceData,
-        }
-      );
+      if (alert.type === "rsi_divergence") {
+        const rsiAlert = alert as RSIAlert;
+        console.log(
+          `📊 ${alert.type.toUpperCase()} alert for ${alert.symbol} ${
+            alert.timeframe
+          }:`,
+          {
+            price: alert.currentPrice,
+            rsiValue: rsiAlert.rsiValue,
+            divergenceType: rsiAlert.divergenceType,
+            divergenceData: rsiAlert.divergenceData,
+          }
+        );
+      } else {
+        const volumeAlert = alert as VolumeAlert;
+        console.log(
+          `📊 ${alert.type.toUpperCase()} alert for ${alert.symbol} ${
+            alert.timeframe
+          }:`,
+          {
+            price: alert.currentPrice,
+            volume: volumeAlert.volume,
+            averageVolume: volumeAlert.averageVolume,
+            spikeRatio: volumeAlert.spikeRatio,
+            divergenceData: volumeAlert.divergenceData,
+          }
+        );
+      }
     });
   }
 
@@ -133,15 +149,18 @@ export class BotService {
   async sendStartupMessage(): Promise<void> {
     const alertConfig = this.alertService.getConfig();
     const startupMessage = `
-<b>VOLUME ALERT BOT STARTED</b>
+<b>BOT CẢNH BÁO VOLUME & RSI ĐÃ KHỞI ĐỘNG</b>
 
-<b>Pairs:</b> ${alertConfig.pairs.join(", ")}
-<b>Timeframes:</b> ${alertConfig.timeframes.join(", ")}
-<b>Spike Threshold:</b> ${alertConfig.volumeSpikeThreshold}x
-<b>Divergence Candles:</b> ${alertConfig.divergenceCandleCount}
+<b>Cặp tiền:</b> ${alertConfig.pairs.join(", ")}
+<b>Khung thời gian:</b> ${alertConfig.timeframes.join(", ")}
+<b>Ngưỡng tăng volume:</b> ${alertConfig.volumeSpikeThreshold}x
+<b>Số nến phân kỳ:</b> ${alertConfig.divergenceCandleCount}
+<b>RSI Period:</b> ${alertConfig.rsiPeriod}
+<b>RSI Overbought:</b> ${alertConfig.rsiOverbought}
+<b>RSI Oversold:</b> ${alertConfig.rsiOversold}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<i>Started at: ${new Date().toISOString()}</i>
+<i>Khởi động lúc: ${new Date().toISOString()}</i>
     `.trim();
 
     await this.telegramService.sendMessage(startupMessage);

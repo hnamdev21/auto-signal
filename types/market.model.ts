@@ -40,6 +40,10 @@ export interface AlertConfig {
   timeframes: string[];
   volumeSpikeThreshold: number; // Default: 1.5
   divergenceCandleCount: number; // Default: 3
+  rsiPeriod: number; // Default: 14
+  rsiOverbought: number; // Default: 70
+  rsiOversold: number; // Default: 30
+  rsiDivergenceLookback: number; // Default: 20
 }
 
 export interface VolumeAlert {
@@ -63,13 +67,46 @@ export interface VolumeAlert {
   };
 }
 
-export interface DivergenceTracker {
+export interface RSIAlert {
+  type: "rsi_divergence";
+  symbol: string;
+  timeframe: string;
+  timestamp: number;
+  currentPrice: number;
+  rsiValue: number;
+  divergenceType: "bullish" | "bearish";
+  divergenceData: {
+    priceHigh: number;
+    priceLow: number;
+    rsiHigh: number;
+    rsiLow: number;
+    priceChange: number;
+    rsiChange: number;
+    lookbackPeriod: number;
+  };
+}
+
+export interface VolumeDivergenceTracker {
   [key: string]: {
     [timeframe: string]: {
       candles: Array<{
         openTime: number;
         close: number;
         volume: number;
+        isClosed: boolean;
+      }>;
+      lastAlertTime?: number;
+    };
+  };
+}
+
+export interface RSIDivergenceTracker {
+  [key: string]: {
+    [timeframe: string]: {
+      rsiData: Array<{
+        openTime: number;
+        close: number;
+        rsi: number;
         isClosed: boolean;
       }>;
       lastAlertTime?: number;

@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { VolumeAlert } from "../types/market.model";
+import { VolumeAlert, RSIAlert } from "../types/market.model";
 
 export class TelegramService {
   private bot: TelegramBot;
@@ -30,10 +30,10 @@ export class TelegramService {
    */
   async sendStartupMessage(timeframe: string = "5m"): Promise<void> {
     const message = `
-<b>VOLUME ALERT BOT STARTED</b>
+<b>BOT CẢNH BÁO VOLUME ĐÃ KHỞI ĐỘNG</b>
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<i>Started at: ${new Date().toISOString()}</i>
+<i>Khởi động lúc: ${new Date().toISOString()}</i>
     `.trim();
 
     await this.sendMessage(message);
@@ -44,14 +44,14 @@ export class TelegramService {
    */
   async sendErrorMessage(error: string, context?: string): Promise<void> {
     const message = `
-<b>BOT ERROR</b>
+<b>LỖI BOT</b>
 
-${context ? `<b>Context:</b> ${context}\n` : ""}
-<b>Error:</b> ${error}
-<b>Time:</b> ${new Date().toISOString()}
+${context ? `<b>Ngữ cảnh:</b> ${context}\n` : ""}
+<b>Lỗi:</b> ${error}
+<b>Thời gian:</b> ${new Date().toISOString()}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<i>Check bot logs for more details</i>
+<i>Kiểm tra log bot để biết thêm chi tiết</i>
     `.trim();
 
     await this.sendMessage(message);
@@ -62,10 +62,10 @@ ${context ? `<b>Context:</b> ${context}\n` : ""}
    */
   async sendHealthCheck(): Promise<void> {
     const message = `
-<b>BOT HEALTH CHECK</b>
+<b>KIỂM TRA SỨC KHỎE BOT</b>
 
-Bot is running normally
-Last check: ${new Date().toISOString()}
+Bot đang hoạt động bình thường
+Lần kiểm tra cuối: ${new Date().toISOString()}
     `.trim();
 
     await this.sendMessage(message);
@@ -76,18 +76,18 @@ Last check: ${new Date().toISOString()}
    */
   async sendVolumeSpikeAlert(alert: VolumeAlert): Promise<void> {
     const message = `
-<b>VOLUME SPIKE DETECTED</b>
+<b>PHÁT HIỆN VOLUME TĂNG ĐỘT BIẾN</b>
 
 <b>${alert.symbol}</b> | <b>${alert.timeframe}</b>
-<b>Price:</b> $${alert.currentPrice.toFixed(2)}
+<b>Giá:</b> $${alert.currentPrice.toFixed(2)}
 <b>Volume:</b> ${alert.volume.toFixed(2)}
-<b>Average:</b> ${alert.averageVolume.toFixed(2)}
-<b>Spike:</b> <b>${alert.spikeRatio?.toFixed(2)}x</b>
+<b>Trung bình:</b> ${alert.averageVolume.toFixed(2)}
+<b>Tăng:</b> <b>${alert.spikeRatio?.toFixed(2)}x</b>
 
-<b>Time:</b> ${new Date(alert.timestamp).toISOString()}
+<b>Thời gian:</b> ${new Date(alert.timestamp).toISOString()}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<i>Trading activity increased significantly</i>
+<i>Hoạt động giao dịch tăng đáng kể</i>
     `.trim();
 
     await this.sendMessage(message);
@@ -103,18 +103,18 @@ Last check: ${new Date().toISOString()}
       alert.divergenceData;
 
     const message = `
-<b>VOLUME DIVERGENCE DETECTED</b>
+<b>PHÁT HIỆN PHÂN KỲ VOLUME</b>
 
 <b>${alert.symbol}</b> | <b>${alert.timeframe}</b>
-<b>Price:</b> $${alert.currentPrice.toFixed(2)}
-<b>Candles:</b> ${candleCount}
+<b>Giá:</b> $${alert.currentPrice.toFixed(2)}
+<b>Số nến:</b> ${candleCount}
 
-<b>Price Change:</b> <b>${priceChange > 0 ? "+" : ""}${priceChange.toFixed(
+<b>Thay đổi giá:</b> <b>${priceChange > 0 ? "+" : ""}${priceChange.toFixed(
       2
     )}%</b>
-<b>Volume Change:</b> <b>${volumeChange.toFixed(2)}%</b>
+<b>Thay đổi volume:</b> <b>${volumeChange.toFixed(2)}%</b>
 
-<b>Recent Candles:</b>
+<b>Nến gần đây:</b>
 ${candles
   .map(
     (candle, index) =>
@@ -124,10 +124,52 @@ ${candles
   )
   .join("\n")}
 
-<b>Time:</b> ${new Date(alert.timestamp).toISOString()}
+<b>Thời gian:</b> ${new Date(alert.timestamp).toISOString()}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<i>Warning: Price rising but volume declining - potential weakness</i>
+<i>Cảnh báo: Giá tăng nhưng volume giảm - dấu hiệu yếu</i>
+    `.trim();
+
+    await this.sendMessage(message);
+  }
+
+  /**
+   * Send RSI divergence alert
+   */
+  async sendRSIDivergenceAlert(alert: RSIAlert): Promise<void> {
+    const { divergenceType, rsiValue, divergenceData } = alert;
+    const { priceHigh, priceLow, rsiHigh, rsiLow, priceChange, rsiChange } =
+      divergenceData;
+
+    const message = `
+<b>PHÁT HIỆN PHÂN KỲ RSI</b>
+
+<b>${alert.symbol}</b> | <b>${alert.timeframe}</b>
+<b>Giá hiện tại:</b> $${alert.currentPrice.toFixed(2)}
+<b>RSI hiện tại:</b> ${rsiValue.toFixed(2)}
+
+<b>Loại phân kỳ:</b> <b>${
+      divergenceType === "bullish" ? "TÍCH CỰC" : "TIÊU CỰC"
+    }</b>
+
+<b>Chi tiết phân kỳ:</b>
+• Giá cao: $${priceHigh.toFixed(2)}
+• Giá thấp: $${priceLow.toFixed(2)}
+• RSI cao: ${rsiHigh.toFixed(2)}
+• RSI thấp: ${rsiLow.toFixed(2)}
+
+<b>Thay đổi:</b>
+• Giá: <b>${priceChange > 0 ? "+" : ""}${priceChange.toFixed(2)}%</b>
+• RSI: <b>${rsiChange > 0 ? "+" : ""}${rsiChange.toFixed(2)}%</b>
+
+<b>Thời gian:</b> ${new Date(alert.timestamp).toISOString()}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<i>${
+      divergenceType === "bullish"
+        ? "Tín hiệu mua: Giá giảm nhưng RSI tăng"
+        : "Tín hiệu bán: Giá tăng nhưng RSI giảm"
+    }</i>
     `.trim();
 
     await this.sendMessage(message);
@@ -136,13 +178,15 @@ ${candles
   /**
    * Send multiple alerts
    */
-  async sendVolumeAlerts(alerts: VolumeAlert[]): Promise<void> {
+  async sendAlerts(alerts: (VolumeAlert | RSIAlert)[]): Promise<void> {
     for (const alert of alerts) {
       try {
         if (alert.type === "spike") {
-          await this.sendVolumeSpikeAlert(alert);
+          await this.sendVolumeSpikeAlert(alert as VolumeAlert);
         } else if (alert.type === "divergence") {
-          await this.sendVolumeDivergenceAlert(alert);
+          await this.sendVolumeDivergenceAlert(alert as VolumeAlert);
+        } else if (alert.type === "rsi_divergence") {
+          await this.sendRSIDivergenceAlert(alert as RSIAlert);
         }
 
         // Small delay between alerts to avoid rate limiting
