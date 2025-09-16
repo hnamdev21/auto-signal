@@ -5,6 +5,7 @@ import { AlertService } from "./alert.service";
 import { TelegramService } from "./telegram.service";
 import { OKXBalanceAlertService } from "./okx-balance-alert.service";
 import { BotActionService, OKXActionExecutor } from "./bot-action.service";
+import { TelegramCommandService } from "./telegram-command.service";
 import { OKXService } from "./okx.service";
 import { CandleSyncScheduler } from "../utils/candle-sync-scheduler.utils";
 
@@ -14,6 +15,7 @@ export class BotInitializer {
   private candleSyncScheduler!: CandleSyncScheduler;
   private okxBalanceAlertService!: OKXBalanceAlertService;
   private botActionService!: BotActionService;
+  private telegramCommandService!: TelegramCommandService;
   private isInitialized: boolean = false;
 
   constructor() {
@@ -39,8 +41,26 @@ export class BotInitializer {
       config.bot.telegramChatId
     );
 
-    // Initialize OKX services
+    // Initialize OKX services (without setting OKX service for command service yet)
     this.initializeOKXServices(config.okx, telegramService);
+
+    // Initialize telegram command service
+    this.telegramCommandService = new TelegramCommandService(
+      telegramService.bot, // Access the underlying bot instance
+      config.bot.telegramChatId,
+      this.botActionService,
+      this.okxBalanceAlertService
+    );
+
+    // Set OKX service for command service if available
+    if (config.okx.apiKey && config.okx.apiSecret) {
+      const okxService = new OKXService(
+        config.okx.apiKey,
+        config.okx.apiSecret,
+        config.okx.passphrase
+      );
+      this.telegramCommandService.setOKXService(okxService);
+    }
 
     // Initialize bot service
     this.botService = new BotService(
@@ -80,6 +100,7 @@ export class BotInitializer {
       );
       const okxActionExecutor = new OKXActionExecutor(okxService);
       this.botActionService.addExecutor(okxActionExecutor);
+
       console.log("✅ OKX action executor initialized");
     } else {
       console.log(
@@ -214,5 +235,12 @@ export class BotInitializer {
    */
   getBotActionService(): BotActionService {
     return this.botActionService;
+  }
+
+  /**
+   * Get telegram command service for external access
+   */
+  getTelegramCommandService(): TelegramCommandService {
+    return this.telegramCommandService;
   }
 }

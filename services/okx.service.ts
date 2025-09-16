@@ -124,18 +124,26 @@ export class OKXService {
         ...(price && orderType === "limit" ? { px: price.toString() } : {}),
       };
 
+      console.log("📤 OKX Order Payload:", payload);
+
       const response = await this.makeRequest("POST", "/trade/order", payload);
 
+      console.log("📥 OKX Order Response:", response);
+
+      if (response.code !== "0") {
+        throw new Error(
+          `OKX API Error: ${response.msg} (Code: ${response.code})`
+        );
+      }
+
       return {
-        success: response.code === "0",
+        success: true,
         orderId: response.data[0]?.ordId,
         message: response.msg,
       };
     } catch (error: any) {
-      return {
-        success: false,
-        message: `Failed to place futures order: ${error.message}`,
-      };
+      console.error("❌ OKX Order Error:", error);
+      throw error; // Re-throw để bot action service có thể catch
     }
   }
 

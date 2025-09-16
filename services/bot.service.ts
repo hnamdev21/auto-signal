@@ -251,6 +251,13 @@ export class BotService {
 
 ${okxInfo}
 
+<b>🤖 LỆNH BOT:</b>
+/balance - Kiểm tra số dư OKX
+/filled - Kiểm tra lệnh đã khớp
+/order - Đặt lệnh futures
+/test - Test kết nối OKX
+/help - Danh sách lệnh
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 <i>Khởi động lúc: ${new Date().toISOString()}</i>
     `.trim();

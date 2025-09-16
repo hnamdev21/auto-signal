@@ -1,4 +1,4 @@
-import { OKXService } from "./okx.service";
+import { OKXService, OrderAction, PositionType } from "./okx.service";
 
 export interface BotAction {
   id: string;
@@ -83,8 +83,8 @@ export class OKXActionExecutor implements ActionExecutor {
 
     return await this.okxService.placeFuturesOrder(
       symbol,
-      "open" as any,
-      "long" as any,
+      OrderAction.Open,
+      PositionType.Long,
       quantity,
       price,
       price ? "limit" : "market",
@@ -101,8 +101,8 @@ export class OKXActionExecutor implements ActionExecutor {
 
     return await this.okxService.placeFuturesOrder(
       symbol,
-      "open" as any,
-      "short" as any,
+      OrderAction.Open,
+      PositionType.Short,
       quantity,
       price,
       price ? "limit" : "market",

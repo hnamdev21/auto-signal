@@ -7,11 +7,11 @@ import {
 } from "../types/market.model";
 
 export class TelegramService {
-  private bot: TelegramBot;
+  public bot: TelegramBot;
   private chatId: string;
 
   constructor(botToken: string, chatId: string) {
-    this.bot = new TelegramBot(botToken, { polling: false });
+    this.bot = new TelegramBot(botToken, { polling: true });
     this.chatId = chatId;
   }
 

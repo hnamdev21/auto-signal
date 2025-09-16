@@ -39,6 +39,14 @@ A sophisticated cryptocurrency alert and trading system that monitors multiple t
 - **Futures Support**: Full OKX futures API integration
 - **Order Management**: Place, close, and manage futures orders
 - **Real-time Monitoring**: Live balance and position tracking
+- **Telegram Commands**: Interactive bot commands for trading operations
+
+### 🤖 Telegram Bot Commands
+
+- **`/balance`**: Check OKX futures balance
+- **`/filled`**: View filled and pending orders
+- **`/order`**: Interactive order placement with step-by-step form
+- **`/help`**: Display all available commands
 
 ### 📊 Multi-Pair & Multi-Timeframe Support
 
@@ -219,6 +227,59 @@ Recent Candles:
 📊 OKX Futures Balance Alert
 ```
 
+### Telegram Command Examples
+
+#### Balance Check (`/balance`)
+
+```
+💰 SỐ DƯ OKX FUTURES
+
+• USDT: 1,250.500000
+  - Available: 1,200.000000
+  - Locked: 50.500000
+
+• BTC: 0.025000
+  - Available: 0.020000
+  - Locked: 0.005000
+
+Tổng giá trị: 1,250.525000
+```
+
+#### Order Placement (`/order`)
+
+Interactive form with:
+
+1. **Side Selection**: Buy (Long) or Sell (Short)
+2. **Order Type**: Market or Limit
+3. **Symbol Input**: BTC-USDT, ETH-USDT, etc.
+4. **Quantity**: Order size
+5. **Price**: For limit orders
+6. **Leverage**: 1-125x
+7. **Confirmation**: Review before execution
+
+#### Filled Orders (`/filled`)
+
+```
+📋 TRẠNG THÁI LỆNH
+
+✅ Lệnh đã khớp:
+1. BTC-USDT
+   - Action: open
+   - Position: long
+   - Quantity: 0.1
+   - Price: Market
+   - Leverage: 20x
+   - Time: 2024-01-15 10:30:00
+
+⏳ Lệnh đang chờ:
+1. ETH-USDT
+   - Action: open
+   - Position: short
+   - Quantity: 1.0
+   - Price: 2650.00
+   - Leverage: 10x
+```
+
 ## Architecture
 
 ### Services
@@ -228,6 +289,7 @@ Recent Candles:
 - **TelegramService**: Sends formatted alerts to Telegram
 - **OKXBalanceAlertService**: Monitors OKX futures balance and generates alerts
 - **BotActionService**: Extensible action system for future trading capabilities
+- **TelegramCommandService**: Interactive Telegram bot commands for trading
 - **OKXService**: OKX exchange API integration for trading operations
 - **CandleSyncScheduler**: Ensures synchronized execution
 
@@ -281,6 +343,7 @@ The bot provides comprehensive logging:
 │   ├── okx.service.ts                      # OKX exchange API integration
 │   ├── okx-balance-alert.service.ts        # OKX balance monitoring
 │   ├── bot-action.service.ts               # Extensible trading actions
+│   ├── telegram-command.service.ts         # Interactive Telegram commands
 │   ├── rsi-divergence.service.ts           # RSI divergence detection
 │   ├── scalping.service.ts                 # Scalping signal detection
 │   └── volume-divergence.service.ts        # Volume divergence detection
