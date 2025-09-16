@@ -3,12 +3,17 @@ import { BotService } from "./bot.service";
 import { MultiPairMarketService } from "./multi-pair-market.service";
 import { AlertService } from "./alert.service";
 import { TelegramService } from "./telegram.service";
+import { OKXBalanceAlertService } from "./okx-balance-alert.service";
+import { BotActionService, OKXActionExecutor } from "./bot-action.service";
+import { OKXService } from "./okx.service";
 import { CandleSyncScheduler } from "../utils/candle-sync-scheduler.utils";
 
 export class BotInitializer {
   private configService: BotConfigService;
   private botService!: BotService;
   private candleSyncScheduler!: CandleSyncScheduler;
+  private okxBalanceAlertService!: OKXBalanceAlertService;
+  private botActionService!: BotActionService;
   private isInitialized: boolean = false;
 
   constructor() {
@@ -34,11 +39,16 @@ export class BotInitializer {
       config.bot.telegramChatId
     );
 
+    // Initialize OKX services
+    this.initializeOKXServices(config.okx, telegramService);
+
     // Initialize bot service
     this.botService = new BotService(
       multiPairMarketService,
       alertService,
-      telegramService
+      telegramService,
+      this.okxBalanceAlertService,
+      this.botActionService
     );
 
     // Initialize candle sync scheduler
@@ -46,6 +56,36 @@ export class BotInitializer {
       timeframe: config.smallestTimeframe,
       timezone: "UTC",
     });
+  }
+
+  /**
+   * Initialize OKX-related services
+   */
+  private initializeOKXServices(
+    okxConfig: any,
+    telegramService: TelegramService
+  ): void {
+    // Initialize OKX balance alert service
+    this.okxBalanceAlertService = new OKXBalanceAlertService(okxConfig);
+
+    // Initialize bot action service
+    this.botActionService = new BotActionService();
+
+    // Add OKX action executor if credentials are available
+    if (okxConfig.apiKey && okxConfig.apiSecret) {
+      const okxService = new OKXService(
+        okxConfig.apiKey,
+        okxConfig.apiSecret,
+        okxConfig.passphrase
+      );
+      const okxActionExecutor = new OKXActionExecutor(okxService);
+      this.botActionService.addExecutor(okxActionExecutor);
+      console.log("✅ OKX action executor initialized");
+    } else {
+      console.log(
+        "⚠️ OKX credentials not configured, action executor not available"
+      );
+    }
   }
 
   /**
@@ -68,6 +108,9 @@ export class BotInitializer {
       // Send startup message
       await this.botService.sendStartupMessage();
 
+      // Start OKX balance alert service
+      this.okxBalanceAlertService.start();
+
       // Start the candle-synchronized scheduler
       this.candleSyncScheduler.start(() => this.botService.executeBotTask());
 
@@ -85,6 +128,9 @@ export class BotInitializer {
   stopBot(): void {
     if (this.candleSyncScheduler) {
       this.candleSyncScheduler.stop();
+    }
+    if (this.okxBalanceAlertService) {
+      this.okxBalanceAlertService.stop();
     }
     this.isInitialized = false;
     console.log("🛑 Bot stopped gracefully");
@@ -154,5 +200,19 @@ export class BotInitializer {
    */
   getCandleSyncScheduler(): CandleSyncScheduler {
     return this.candleSyncScheduler;
+  }
+
+  /**
+   * Get OKX balance alert service for external access
+   */
+  getOKXBalanceAlertService(): OKXBalanceAlertService {
+    return this.okxBalanceAlertService;
+  }
+
+  /**
+   * Get bot action service for external access
+   */
+  getBotActionService(): BotActionService {
+    return this.botActionService;
   }
 }

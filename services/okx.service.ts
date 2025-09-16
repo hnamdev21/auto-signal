@@ -33,14 +33,16 @@ interface OrderResponse {
   message?: string;
 }
 
-class OKXService {
+export class OKXService {
   private apiKey: string;
   private apiSecret: string;
+  private passphrase: string;
   private baseUrl: string = "https://www.okx.com/api/v5";
 
-  constructor(apiKey: string, apiSecret: string) {
+  constructor(apiKey: string, apiSecret: string, passphrase: string) {
     this.apiKey = apiKey;
     this.apiSecret = apiSecret;
+    this.passphrase = passphrase;
   }
 
   private mapActionToSide(
@@ -209,7 +211,7 @@ class OKXService {
       "OK-ACCESS-KEY": this.apiKey,
       "OK-ACCESS-SIGN": signature,
       "OK-ACCESS-TIMESTAMP": timestamp,
-      "OK-ACCESS-PASSPHRASE": "",
+      "OK-ACCESS-PASSPHRASE": this.passphrase,
       "Content-Type": "application/json",
     };
 
@@ -246,3 +248,5 @@ class OKXService {
       .digest("base64");
   }
 }
+
+export { OrderAction, PositionType };

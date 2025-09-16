@@ -34,6 +34,15 @@ export interface BotConfig {
   telegramChatId: string;
 }
 
+export interface OKXConfig {
+  apiKey: string;
+  apiSecret: string;
+  passphrase: string;
+  balanceAlertsEnabled: boolean;
+  balanceAlertInterval: number; // in minutes
+  minBalanceThreshold: number;
+}
+
 // Alert System Types
 export interface AlertConfig {
   pairs: string[];
@@ -138,6 +147,23 @@ export interface ScalpingAlert {
     volume?: number;
     averageVolume?: number;
   };
+}
+
+export interface OKXBalanceAlert {
+  type: "okx_balance";
+  timestamp: number;
+  balances: Array<{
+    asset: string;
+    available: number;
+    locked: number;
+    marginBalance?: number;
+    totalValue?: number;
+  }>;
+  totalPortfolioValue?: number;
+  alertType:
+    | "balance_update"
+    | "low_balance_warning"
+    | "balance_threshold_breach";
 }
 
 export interface ScalpingConfig {

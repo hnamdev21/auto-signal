@@ -1,12 +1,14 @@
-import { BotConfig, AlertConfig } from "../types/market.model";
+import { BotConfig, AlertConfig, OKXConfig } from "../types/market.model";
 
 export class BotConfigService {
   private botConfig: BotConfig;
   private alertConfig: AlertConfig;
+  private okxConfig: OKXConfig;
 
   constructor() {
     this.botConfig = this.loadBotConfig();
     this.alertConfig = this.loadAlertConfig();
+    this.okxConfig = this.loadOKXConfig();
   }
 
   /**
@@ -48,6 +50,24 @@ export class BotConfigService {
   }
 
   /**
+   * Load OKX configuration from environment variables
+   */
+  private loadOKXConfig(): OKXConfig {
+    return {
+      apiKey: process.env.OKX_API_KEY || "",
+      apiSecret: process.env.OKX_API_SECRET || "",
+      passphrase: process.env.OKX_PASSPHRASE || "",
+      balanceAlertsEnabled: process.env.OKX_BALANCE_ALERTS_ENABLED === "true",
+      balanceAlertInterval: parseInt(
+        process.env.OKX_BALANCE_ALERT_INTERVAL || "5"
+      ),
+      minBalanceThreshold: parseFloat(
+        process.env.OKX_MIN_BALANCE_THRESHOLD || "0.001"
+      ),
+    };
+  }
+
+  /**
    * Get bot configuration
    */
   getBotConfig(): BotConfig {
@@ -59,6 +79,13 @@ export class BotConfigService {
    */
   getAlertConfig(): AlertConfig {
     return { ...this.alertConfig };
+  }
+
+  /**
+   * Get OKX configuration
+   */
+  getOKXConfig(): OKXConfig {
+    return { ...this.okxConfig };
   }
 
   /**
@@ -122,16 +149,26 @@ export class BotConfigService {
   }
 
   /**
+   * Update OKX configuration
+   */
+  updateOKXConfig(newConfig: Partial<OKXConfig>): void {
+    this.okxConfig = { ...this.okxConfig, ...newConfig };
+    console.log("📝 OKX config updated:", this.okxConfig);
+  }
+
+  /**
    * Get configuration summary
    */
   getConfigSummary(): {
     bot: BotConfig;
     alert: AlertConfig;
+    okx: OKXConfig;
     smallestTimeframe: string;
   } {
     return {
       bot: this.getBotConfig(),
       alert: this.getAlertConfig(),
+      okx: this.getOKXConfig(),
       smallestTimeframe: this.getSmallestTimeframe(),
     };
   }

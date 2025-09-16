@@ -1,21 +1,34 @@
 import { MultiPairMarketService } from "./multi-pair-market.service";
 import { AlertService } from "./alert.service";
 import { TelegramService } from "./telegram.service";
-import { VolumeAlert, RSIAlert, ScalpingAlert } from "../types/market.model";
+import { OKXBalanceAlertService } from "./okx-balance-alert.service";
+import { BotActionService } from "./bot-action.service";
+import {
+  VolumeAlert,
+  RSIAlert,
+  ScalpingAlert,
+  OKXBalanceAlert,
+} from "../types/market.model";
 
 export class BotService {
   private multiPairMarketService: MultiPairMarketService;
   private alertService: AlertService;
   private telegramService: TelegramService;
+  private okxBalanceAlertService: OKXBalanceAlertService;
+  private botActionService: BotActionService;
 
   constructor(
     multiPairMarketService: MultiPairMarketService,
     alertService: AlertService,
-    telegramService: TelegramService
+    telegramService: TelegramService,
+    okxBalanceAlertService: OKXBalanceAlertService,
+    botActionService: BotActionService
   ) {
     this.multiPairMarketService = multiPairMarketService;
     this.alertService = alertService;
     this.telegramService = telegramService;
+    this.okxBalanceAlertService = okxBalanceAlertService;
+    this.botActionService = botActionService;
   }
 
   /**
@@ -34,7 +47,19 @@ export class BotService {
       const marketData = await this.multiPairMarketService.fetchAllMarketData();
 
       // Process alerts
-      const alerts = this.alertService.processMarketData(marketData);
+      const alerts: (
+        | VolumeAlert
+        | RSIAlert
+        | ScalpingAlert
+        | OKXBalanceAlert
+      )[] = this.alertService.processMarketData(marketData);
+
+      // Check for OKX balance alerts
+      const okxBalanceAlert =
+        await this.okxBalanceAlertService.getBalanceAlert();
+      if (okxBalanceAlert) {
+        alerts.push(okxBalanceAlert);
+      }
 
       if (alerts.length > 0) {
         console.log(`🚨 Found ${alerts.length} alerts`);
@@ -59,10 +84,20 @@ export class BotService {
    * Log detailed information about detected alerts
    */
   private logAlertDetails(
-    alerts: (VolumeAlert | RSIAlert | ScalpingAlert)[]
+    alerts: (VolumeAlert | RSIAlert | ScalpingAlert | OKXBalanceAlert)[]
   ): void {
     alerts.forEach((alert) => {
-      if (alert.type === "rsi_divergence") {
+      if (alert.type === "okx_balance") {
+        const okxAlert = alert as OKXBalanceAlert;
+        console.log(`💰 ${alert.type.toUpperCase()} alert:`, {
+          alertType: okxAlert.alertType,
+          balanceCount: okxAlert.balances.length,
+          totalValue: okxAlert.totalPortfolioValue,
+          balances: okxAlert.balances.map(
+            (b) => `${b.asset}: ${b.available + b.locked}`
+          ),
+        });
+      } else if (alert.type === "rsi_divergence") {
         const rsiAlert = alert as RSIAlert;
         console.log(
           `📊 ${alert.type.toUpperCase()} alert for ${alert.symbol} ${
@@ -155,6 +190,16 @@ export class BotService {
         return false;
       }
 
+      // Check OKX connection if configured
+      const okxStatus = this.okxBalanceAlertService.getStatus();
+      if (okxStatus.config.apiKey && okxStatus.config.apiSecret) {
+        const isOKXWorking = await this.okxBalanceAlertService.testConnection();
+        if (!isOKXWorking) {
+          console.error("❌ OKX service connection failed");
+          return false;
+        }
+      }
+
       console.log("✅ All services are healthy");
       return true;
     } catch (error) {
@@ -168,8 +213,27 @@ export class BotService {
    */
   async sendStartupMessage(): Promise<void> {
     const alertConfig = this.alertService.getConfig();
+    const okxStatus = this.okxBalanceAlertService.getStatus();
+
+    let okxInfo = "";
+    if (okxStatus.config.apiKey && okxStatus.config.apiSecret) {
+      okxInfo = `
+<b>💰 OKX INTEGRATION:</b>
+• Balance Alerts: ${
+        okxStatus.config.balanceAlertsEnabled ? "ENABLED" : "DISABLED"
+      }
+• Alert Interval: ${okxStatus.config.balanceAlertInterval} minutes
+• Min Threshold: ${okxStatus.config.minBalanceThreshold}
+• Action System: READY`;
+    } else {
+      okxInfo = `
+<b>💰 OKX INTEGRATION:</b>
+• Status: NOT CONFIGURED
+• Add OKX_API_KEY and OKX_API_SECRET to enable`;
+    }
+
     const startupMessage = `
-<b>BOT CẢNH BÁO VOLUME, RSI & SCALPING ĐÃ KHỞI ĐỘNG</b>
+<b>BOT CẢNH BÁO VOLUME, RSI, SCALPING & OKX ĐÃ KHỞI ĐỘNG</b>
 
 <b>Cặp tiền:</b> ${alertConfig.pairs.join(", ")}
 <b>Khung thời gian:</b> ${alertConfig.timeframes.join(", ")}
@@ -185,6 +249,8 @@ export class BotService {
 • Bollinger Bands
 • Volume Spike Detection
 
+${okxInfo}
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 <i>Khởi động lúc: ${new Date().toISOString()}</i>
     `.trim();
@@ -198,10 +264,14 @@ export class BotService {
   getServiceStats(): {
     market: ReturnType<MultiPairMarketService["getServiceStats"]>;
     alert: ReturnType<AlertService["getConfig"]>;
+    okx: ReturnType<OKXBalanceAlertService["getStatus"]>;
+    actions: ReturnType<BotActionService["getStatus"]>;
   } {
     return {
       market: this.multiPairMarketService.getServiceStats(),
       alert: this.alertService.getConfig(),
+      okx: this.okxBalanceAlertService.getStatus(),
+      actions: this.botActionService.getStatus(),
     };
   }
 
@@ -218,5 +288,19 @@ export class BotService {
         newConfig as ReturnType<AlertService["getConfig"]>
       );
     }
+  }
+
+  /**
+   * Get OKX balance alert service
+   */
+  getOKXBalanceAlertService(): OKXBalanceAlertService {
+    return this.okxBalanceAlertService;
+  }
+
+  /**
+   * Get bot action service
+   */
+  getBotActionService(): BotActionService {
+    return this.botActionService;
   }
 }

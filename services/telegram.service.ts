@@ -1,5 +1,10 @@
 import TelegramBot from "node-telegram-bot-api";
-import { VolumeAlert, RSIAlert, ScalpingAlert } from "../types/market.model";
+import {
+  VolumeAlert,
+  RSIAlert,
+  ScalpingAlert,
+  OKXBalanceAlert,
+} from "../types/market.model";
 
 export class TelegramService {
   private bot: TelegramBot;
@@ -238,10 +243,55 @@ ${indicatorDetails}
   }
 
   /**
+   * Send OKX balance alert
+   */
+  async sendOKXBalanceAlert(alert: OKXBalanceAlert): Promise<void> {
+    const { balances, totalPortfolioValue, alertType } = alert;
+
+    let alertEmoji = "💰";
+    let alertTitle = "CẬP NHẬT SỐ DƯ OKX";
+
+    switch (alertType) {
+      case "low_balance_warning":
+        alertEmoji = "⚠️";
+        alertTitle = "CẢNH BÁO SỐ DƯ THẤP";
+        break;
+      case "balance_threshold_breach":
+        alertEmoji = "🚨";
+        alertTitle = "THAY ĐỔI SỐ DƯ LỚN";
+        break;
+    }
+
+    const balanceDetails = balances
+      .map((balance) => {
+        const total = balance.available + balance.locked;
+        return `• <b>${balance.asset}:</b> ${total.toFixed(
+          6
+        )} (Available: ${balance.available.toFixed(6)})`;
+      })
+      .join("\n");
+
+    const message = `
+<b>${alertEmoji} ${alertTitle}</b>
+
+${balanceDetails}
+
+<b>Tổng giá trị:</b> ${totalPortfolioValue?.toFixed(6) || "N/A"}
+
+<b>Thời gian:</b> ${new Date(alert.timestamp).toISOString()}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<i>📊 OKX Futures Balance Alert</i>
+    `.trim();
+
+    await this.sendMessage(message);
+  }
+
+  /**
    * Send multiple alerts
    */
   async sendAlerts(
-    alerts: (VolumeAlert | RSIAlert | ScalpingAlert)[]
+    alerts: (VolumeAlert | RSIAlert | ScalpingAlert | OKXBalanceAlert)[]
   ): Promise<void> {
     for (const alert of alerts) {
       try {
@@ -258,15 +308,14 @@ ${indicatorDetails}
           alert.type === "volume_spike"
         ) {
           await this.sendScalpingAlert(alert as ScalpingAlert);
+        } else if (alert.type === "okx_balance") {
+          await this.sendOKXBalanceAlert(alert as OKXBalanceAlert);
         }
 
         // Small delay between alerts to avoid rate limiting
         await new Promise((resolve) => setTimeout(resolve, 1000));
       } catch (error) {
-        console.error(
-          `❌ Error sending alert for ${alert.symbol} ${alert.timeframe}:`,
-          error
-        );
+        console.error(`❌ Error sending alert:`, error);
       }
     }
   }
